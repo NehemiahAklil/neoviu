@@ -10,6 +10,7 @@ VideoQuality: TypeAlias = Annotated[str, StringConstraints(pattern=r"^[1-9]\d*$"
 class ProviderName(Enum):
     ALLANIME = "allanime"
     ANIMEPAHE = "animepahe"
+    HIANIME = "hianime"
     ANIMEUNITY = "animeunity"
 
 
@@ -30,6 +31,10 @@ class ProviderServer(Enum):
 
     # AnimeUnityServer values
     VIXCLOUD = "vixcloud"
+
+    # HiAnime and AniPub values
+    ZOKOANIME = "zokoanime"
+    MEGAPLAY = "megaplay"
 
 
 class MediaTranslationType(Enum):
