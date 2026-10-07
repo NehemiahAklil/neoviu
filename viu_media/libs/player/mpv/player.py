@@ -97,7 +97,7 @@ class MpvPlayer(BasePlayer):
                 "is.xyz.mpv/.MPVActivity",
             ]
 
-        subprocess.run(args,env=detect.get_clean_env())
+        subprocess.run(args, env=detect.get_clean_env())
 
         return PlayerResult(params.episode)
 
@@ -148,6 +148,13 @@ class MpvPlayer(BasePlayer):
             check=False,
             env=detect.get_clean_env(),
         )
+        if proc.returncode != 0:
+            logger.error(
+                "MPV exited with status %s: %s", proc.returncode, proc.stderr.strip()
+            )
+            raise ViuError(
+                f"MPV exited with status {proc.returncode}. Check the player output in the log."
+            )
         if proc.stdout:
             for line in reversed(proc.stdout.split("\n")):
                 match = MPV_AV_TIME_PATTERN.search(line.strip())
@@ -186,7 +193,7 @@ class MpvPlayer(BasePlayer):
 
         logger.info(f"Starting MPV with IPC socket: {socket_path}")
 
-        process = subprocess.Popen(pre_args + mpv_args,env=detect.get_clean_env())
+        process = subprocess.Popen(pre_args + mpv_args, env=detect.get_clean_env())
 
         return process
 
@@ -211,7 +218,7 @@ class MpvPlayer(BasePlayer):
             args.append("--player-args")
             args.extend(mpv_args)
 
-        subprocess.run(args,env=detect.get_clean_env())
+        subprocess.run(args, env=detect.get_clean_env())
         return PlayerResult(params.episode)
 
     def _stream_on_desktop_with_syncplay(self, params: PlayerParams) -> PlayerResult:
@@ -233,7 +240,7 @@ class MpvPlayer(BasePlayer):
         if mpv_args := self._create_mpv_cli_options(params):
             args.append("--")
             args.extend(mpv_args)
-        subprocess.run(args,env=detect.get_clean_env())
+        subprocess.run(args, env=detect.get_clean_env())
 
         return PlayerResult(params.episode)
 
@@ -249,8 +256,11 @@ class MpvPlayer(BasePlayer):
         """
         mpv_args = []
         if params.headers:
-            header_str = ",".join([f"{k}:{v}" for k, v in params.headers.items()])
-            mpv_args.append(f"--http-header-fields={header_str}")
+            mpv_args.append("--http-header-fields-clr")
+            mpv_args.extend(
+                f"--http-header-fields-append={name}:{value}"
+                for name, value in params.headers.items()
+            )
 
         if params.subtitles:
             for sub in params.subtitles:
