@@ -9,7 +9,6 @@ Python's built-in html.parser or lxml for better performance when available.
 # TODO: Review and optimize the HTML parsing logic for better performance and flexibility.
 #       Consider adding more utility functions for common HTML manipulation tasks.
 import logging
-import re
 from html.parser import HTMLParser as BaseHTMLParser
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 
@@ -201,22 +200,19 @@ def extract_attributes(html_element: str) -> Dict[str, str]:
     if not html_element:
         return {}
 
-    # Use regex to extract attributes from HTML string
-    attr_pattern = r'(\w+)=(["\'])([^"\']*?)\2'
-    matches = re.findall(attr_pattern, html_element)
+    parser = BuiltinHTMLParser()
+    parser.feed(html_element)
+    if not parser.elements:
+        return {}
 
-    attributes = {}
-    for match in matches:
-        attr_name, _, attr_value = match
+    attributes: Dict[str, str] = {}
+    for attr_name, attr_value in parser.elements[0]["attrs"].items():
+        if attr_value is None:
+            continue
         attributes[attr_name] = attr_value
-
-    # Handle attributes without quotes
-    unquoted_pattern = r"(\w+)=([^\s>]+)"
-    unquoted_matches = re.findall(unquoted_pattern, html_element)
-    for attr_name, attr_value in unquoted_matches:
-        if attr_name not in attributes:
-            attributes[attr_name] = attr_value
-
+        # Existing providers use short aliases such as "src" for "data-src".
+        if "-" in attr_name:
+            attributes[attr_name.rsplit("-", 1)[-1]] = attr_value
     return attributes
 
 
