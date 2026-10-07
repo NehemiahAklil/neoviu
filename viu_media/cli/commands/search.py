@@ -146,6 +146,7 @@ def stream_anime(
 
     from ...libs.player.params import PlayerParams
     from ...libs.provider.anime.params import EpisodeStreamsParams
+    from ...libs.provider.anime.utils.quality import select_stream
 
     player_service = PlayerService(config, provider)
 
@@ -156,6 +157,7 @@ def stream_anime(
                 query=anime_title,
                 episode=episode,
                 translation_type=config.stream.translation_type,
+                quality=config.stream.quality,
             )
         )
         if not streams:
@@ -181,26 +183,15 @@ def stream_anime(
             if not server_name:
                 raise ViuError("Server not selected")
             server = servers[server_name]
-    quality = [
-        ep_stream.link
-        for ep_stream in server.links
-        if ep_stream.quality == config.stream.quality
-    ]
-    if not quality:
-        feedback.warning("Preferred quality not found, selecting quality...")
-        stream_link = selector.choose(
-            "Select Quality", [link.quality for link in server.links]
-        )
-        if not stream_link:
-            raise ViuError("Quality not selected")
-        stream_link = next(
-            (link.link for link in server.links if link.quality == stream_link), None
-        )
-
-    stream_link = server.links[0].link
-    if not stream_link:
+    selected_stream = select_stream(server.links, config.stream.quality)
+    if selected_stream is None:
         raise ViuError(
             f"Failed to get stream link for anime: {anime.title}, episode: {episode}"
+        )
+    stream_link = selected_stream.link
+    if selected_stream.quality != config.stream.quality:
+        feedback.warning(
+            f"Preferred quality is unavailable; using {selected_stream.quality}p."
         )
     feedback.info(f"[green bold]Now Streaming:[/] {anime.title} Episode: {episode}")
 

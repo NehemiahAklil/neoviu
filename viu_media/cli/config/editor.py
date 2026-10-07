@@ -5,11 +5,22 @@ from typing import Any, Literal, get_args, get_origin
 # TODO: should we maintain a separate dependency for InquirerPy or write our own simple prompt system?
 from InquirerPy import inquirer
 from InquirerPy.validator import NumberValidator
-from pydantic import BaseModel
+from pydantic import BaseModel, TypeAdapter, ValidationError
 from pydantic.fields import FieldInfo
 from rich import print
 
 from ...core.config.model import AppConfig
+from ...libs.provider.anime.types import VideoQuality
+
+_quality_adapter = TypeAdapter(VideoQuality)
+
+
+def _valid_video_quality(value: str) -> bool:
+    try:
+        _quality_adapter.validate_python(value)
+    except ValidationError:
+        return False
+    return True
 
 
 class InteractiveConfigEditor:
@@ -81,6 +92,15 @@ class InteractiveConfigEditor:
             field_info.description or "No description available.", width=80
         )
         message = f"{field_name.replace('_', ' ').title()}:"
+
+        if field_type is str and field_name == "quality":
+            return inquirer.text(  # pyright: ignore[reportPrivateImportUsage]
+                message=message,
+                default=str(current_value),
+                validate=_valid_video_quality,
+                invalid_message="Enter a positive video height, such as 720 or 800.",
+                long_instruction=help_text,
+            )
 
         # Boolean fields
         if field_type is bool:

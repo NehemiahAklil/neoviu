@@ -4,7 +4,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from ...libs.media_api.types import MediaSort, UserMediaListSort
-from ...libs.provider.anime.types import ProviderName, ProviderServer
+from ...libs.provider.anime.types import ProviderName, ProviderServer, VideoQuality
 from ..constants import APP_ASCII_ART
 from . import defaults
 from . import descriptions as desc
@@ -160,7 +160,7 @@ class GeneralConfig(BaseModel):
         default=defaults.GENERAL_WELCOME_SCREEN, description=desc.GENERAL_WELCOME_SCREEN
     )
     provider: ProviderName = Field(
-        default=ProviderName.ALLANIME,
+        default=ProviderName(defaults.GENERAL_PROVIDER),
         description=desc.GENERAL_PROVIDER,
     )
     selector: Literal["default", "fzf", "rofi"] = Field(
@@ -233,7 +233,7 @@ class StreamConfig(BaseModel):
         default=defaults.STREAM_PLAYER,
         description=desc.STREAM_PLAYER,
     )
-    quality: Literal["360", "480", "720", "1080"] = Field(
+    quality: VideoQuality = Field(
         default=defaults.STREAM_QUALITY,
         description=desc.STREAM_QUALITY,
     )

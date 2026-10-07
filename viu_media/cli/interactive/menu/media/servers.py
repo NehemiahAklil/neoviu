@@ -3,6 +3,7 @@ from typing import Dict, List
 from .....libs.player.params import PlayerParams
 from .....libs.provider.anime.params import EpisodeStreamsParams
 from .....libs.provider.anime.types import ProviderServer, Server
+from .....libs.provider.anime.utils.quality import select_stream
 from ...session import Context, session
 from ...state import InternalDirective, MenuName, State
 
@@ -32,13 +33,14 @@ def servers(ctx: Context, state: State) -> State | InternalDirective:
                 query=anime_title,
                 episode=episode_number,
                 translation_type=config.stream.translation_type,
+                quality=config.stream.quality,
             )
         )
         # Consume the iterator to get a list of all servers
         if config.stream.server == ProviderServer.TOP and server_iterator:
             try:
                 all_servers = [next(server_iterator)]
-            except Exception:
+            except StopIteration:
                 all_servers = []
         else:
             all_servers: List[Server] = list(server_iterator) if server_iterator else []
@@ -64,7 +66,7 @@ def servers(ctx: Context, state: State) -> State | InternalDirective:
             return InternalDirective.BACK
         selected_server = server_map[chosen_name]
 
-    stream_link_obj = _filter_by_quality(selected_server.links, config.stream.quality)
+    stream_link_obj = select_stream(selected_server.links, config.stream.quality)
     if not stream_link_obj:
         feedback.error(
             f"No stream of quality '{config.stream.quality}' found on server '{selected_server.name}'."
@@ -109,11 +111,3 @@ def servers(ctx: Context, state: State) -> State | InternalDirective:
             }
         ),
     )
-
-
-def _filter_by_quality(links, quality):
-    # Simplified version of your filter_by_quality for brevity
-    for link in links:
-        if str(link.quality) == quality:
-            return link
-    return links[0] if links else None

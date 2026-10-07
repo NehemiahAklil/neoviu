@@ -206,6 +206,7 @@ def download_anime(
 ):
     from ...core.downloader import DownloadParams, create_downloader
     from ...libs.provider.anime.params import EpisodeStreamsParams
+    from ...libs.provider.anime.utils.quality import select_stream
 
     downloader = create_downloader(config.downloads)
 
@@ -216,6 +217,7 @@ def download_anime(
                 query=anime_title,
                 episode=episode,
                 translation_type=config.stream.translation_type,
+                quality=config.stream.quality,
             )
         )
         if not streams:
@@ -241,11 +243,12 @@ def download_anime(
             if not server_name:
                 raise ViuError("Server not selected")
             server = servers[server_name]
-    stream_link = server.links[0].link
-    if not stream_link:
+    selected_stream = select_stream(server.links, config.stream.quality)
+    if selected_stream is None:
         raise ViuError(
             f"Failed to get stream link for anime: {anime.title}, episode: {episode}"
         )
+    stream_link = selected_stream.link
     feedback.info(f"[green bold]Now Downloading:[/] {anime.title} Episode: {episode}")
     downloader.download(
         DownloadParams(

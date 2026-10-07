@@ -1,10 +1,9 @@
 from enum import Enum
-from typing import List, Literal, Optional
+from typing import Annotated, List, Optional, TypeAlias
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, StringConstraints
 
-# from .allanime.types import Server as AllAnimeServer
-# from .animepahe.types import Server as AnimePaheServer
+VideoQuality: TypeAlias = Annotated[str, StringConstraints(pattern=r"^[1-9]\d*$")]
 
 
 # ENUMS
@@ -97,7 +96,7 @@ class EpisodeStream(BaseAnimeProviderModel):
     # episode: str
     link: str
     title: Optional[str] = None
-    quality: Literal["360", "480", "720", "1080"] = "720"
+    quality: VideoQuality = "720"
     translation_type: MediaTranslationType = MediaTranslationType.SUB
     format: Optional[str] = None
     hls: Optional[bool] = None

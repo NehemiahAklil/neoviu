@@ -41,7 +41,7 @@ GENERAL_RECENT = "Number of recently watched anime to keep in history."
 
 # StreamConfig
 STREAM_PLAYER = "The media player to use for streaming."
-STREAM_QUALITY = "Preferred stream quality."
+STREAM_QUALITY = "Preferred video height in pixels (e.g. 360, 720, 800, 1080). If unavailable, use the provider's top-ranked stream."
 STREAM_TRANSLATION_TYPE = "Preferred audio/subtitle language type."
 STREAM_SERVER = (
     "The default server to use from a provider. 'top' uses the first available."

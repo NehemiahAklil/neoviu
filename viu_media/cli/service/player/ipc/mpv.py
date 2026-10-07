@@ -95,10 +95,12 @@ class MPVIPCClient:
                 if self._supports_unix_sockets() and not self._is_windows_named_pipe(
                     self.socket_path
                 ):
-                    self.socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) # type: ignore (type error on Windows but this code path won't be used there)
+                    self.socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)  # type: ignore (type error on Windows but this code path won't be used there)
                     self.socket.connect(self.socket_path)
                 else:
-                    if os.name != "nt" or not self._is_windows_named_pipe(self.socket_path):
+                    if os.name != "nt" or not self._is_windows_named_pipe(
+                        self.socket_path
+                    ):
                         raise MPVIPCError(
                             "MPV IPC requires Unix domain sockets (AF_UNIX) or a Windows named pipe path "
                             "like \\\\.\\pipe\\mpvpipe. Got: "
@@ -593,6 +595,7 @@ class MpvIPCPlayer(BaseIPCPlayer):
                     query=self.player_state.query,
                     episode=target_episode,
                     translation_type=self.stream_config.translation_type,
+                    quality=self.stream_config.quality,
                 )
                 # This is the blocking network call, now safely in a thread
                 episode_streams = list(

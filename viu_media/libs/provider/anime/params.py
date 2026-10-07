@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import Literal, Optional
 
+from .types import VideoQuality
+
 
 @dataclass(frozen=True)
 class SearchParams:
@@ -33,7 +35,7 @@ class EpisodeStreamsParams:
     episode: str
     translation_type: Literal["sub", "dub"] = "sub"
     server: Optional[str] = None
-    quality: Literal["1080", "720", "480", "360"] = "720"
+    quality: VideoQuality = "720"
     subtitles: bool = True
 
 

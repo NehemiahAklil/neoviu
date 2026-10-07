@@ -15,6 +15,7 @@ from ....libs.provider.anime.params import (
     EpisodeStreamsParams,
     SearchParams,
 )
+from ....libs.provider.anime.utils.quality import select_stream
 from ..registry.models import DownloadStatus
 
 if TYPE_CHECKING:
@@ -226,6 +227,7 @@ class DownloadService:
                     query=media_title,
                     episode=episode_number,
                     translation_type=self.app_config.stream.translation_type,
+                    quality=self.app_config.stream.quality,
                 )
             )
             if not streams_iterator:
@@ -245,7 +247,9 @@ class DownloadService:
                     except StopIteration:
                         break
 
-            stream_link = server.links[0]
+            stream_link = select_stream(server.links, self.app_config.stream.quality)
+            if stream_link is None:
+                raise ValueError(f"No stream links found for Episode {episode_number}")
             episode_title = f"{media_item.title.english}; Episode {episode_number}"
             if media_item.streaming_episodes and media_item.streaming_episodes.get(
                 episode_number
