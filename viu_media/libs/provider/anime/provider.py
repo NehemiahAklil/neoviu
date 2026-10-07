@@ -9,12 +9,8 @@ from .types import ProviderName
 logger = logging.getLogger(__name__)
 
 PROVIDERS_AVAILABLE = {
-    "allanime": "provider.AllAnime",
-    "animepahe": "provider.AnimePahe",
     "hianime": "provider.HiAnime",
     "anipub": "provider.AniPub",
-    "nyaa": "provider.Nyaa",
-    "yugen": "provider.Yugen",
     "animeunity": "provider.AnimeUnity",
 }
 
@@ -31,7 +27,7 @@ class AnimeProviderFactory:
         and injects a pre-configured HTTP client.
 
         Args:
-            provider_name: The name of the provider to create (e.g., 'allanime').
+            provider_name: The name of the provider to create (e.g., 'hianime').
 
         Returns:
             An instance of a class that inherits from BaseProvider.

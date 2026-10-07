@@ -10,7 +10,7 @@ from pydantic.fields import FieldInfo
 from rich import print
 
 from ...core.config.model import AppConfig
-from ...libs.provider.anime.types import VideoQuality
+from ...libs.provider.anime.types import ProviderName, VideoQuality
 
 _quality_adapter = TypeAdapter(VideoQuality)
 
@@ -92,6 +92,17 @@ class InteractiveConfigEditor:
             field_info.description or "No description available.", width=80
         )
         message = f"{field_name.replace('_', ' ').title()}:"
+
+        if field_type is ProviderName:
+            return inquirer.select(  # pyright: ignore[reportPrivateImportUsage]
+                message=message,
+                choices=[
+                    {"name": provider.value, "value": provider}
+                    for provider in ProviderName
+                ],
+                default=current_value,
+                long_instruction=help_text,
+            )
 
         if field_type is str and field_name == "quality":
             return inquirer.text(  # pyright: ignore[reportPrivateImportUsage]

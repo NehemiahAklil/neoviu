@@ -70,7 +70,6 @@ def options_from_model(model: type[BaseModel], parent_name: str = "") -> Callabl
             "type": _get_click_type(field_info),
             "help": field_info.description or "",
         }
-
         if (
             field_info.annotation is not None
             and isinstance(field_info.annotation, type)

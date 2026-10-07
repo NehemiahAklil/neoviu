@@ -8,8 +8,6 @@ VideoQuality: TypeAlias = Annotated[str, StringConstraints(pattern=r"^[1-9]\d*$"
 
 # ENUMS
 class ProviderName(Enum):
-    ALLANIME = "allanime"
-    ANIMEPAHE = "animepahe"
     HIANIME = "hianime"
     ANIPUB = "anipub"
     ANIMEUNITY = "animeunity"
@@ -18,22 +16,7 @@ class ProviderName(Enum):
 class ProviderServer(Enum):
     TOP = "TOP"
 
-    # AllAnimeServer values
-    SHAREPOINT = "sharepoint"
-    DROPBOX = "dropbox"
-    GOGOANIME = "gogoanime"
-    WETRANSFER = "weTransfer"
-    WIXMP = "wixmp"
-    YT = "Yt"
-    MP4_UPLOAD = "mp4-upload"
-
-    # AnimePaheServer values
-    KWIK = "kwik"
-
-    # AnimeUnityServer values
     VIXCLOUD = "vixcloud"
-
-    # HiAnime and AniPub values
     ZOKOANIME = "zokoanime"
     MEGAPLAY = "megaplay"
 

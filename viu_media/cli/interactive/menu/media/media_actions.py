@@ -82,7 +82,7 @@ def media_actions(ctx: Context, state: State) -> State | InternalDirective:
                 ctx, state
             ),
             f"{'ℹ️ ' if icons else ''}View Info": _view_info(ctx, state),
-            f"{'📀 ' if icons else ''}Change Provider (Current: {ctx.config.general.provider.value.upper()})": _change_provider(
+            f"{'📀 ' if icons else ''}Change Provider (Current: {ctx.config.general.provider.value})": _change_provider(
                 ctx, state
             ),
             f"{'🔘 ' if icons else ''}Toggle Auto Select Anime (Current: {ctx.config.general.auto_select_anime_result})": _toggle_config_state(
@@ -307,12 +307,15 @@ def _change_provider(ctx: Context, state: State) -> MenuAction:
     def action():
         from .....libs.provider.anime.types import ProviderName
 
-        new_provider = ctx.selector.choose(
-            "Select Provider", [provider.value for provider in ProviderName]
-        )
-        ctx.config.general.provider = ProviderName(new_provider)
+        choices = {provider.value: provider for provider in ProviderName}
+        selected = ctx.selector.choose("Select Provider", list(choices))
+        if not selected:
+            return InternalDirective.RELOAD
+        ctx.config.general.provider = choices[selected]
         # force a reset of the provider
         ctx._provider = None
+        ctx._player = None
+        ctx._download = None
         return InternalDirective.RELOAD
 
     return action

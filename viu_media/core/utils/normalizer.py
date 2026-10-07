@@ -72,22 +72,20 @@ def provider_title_to_media_api_title(provider_title: str, provider_name: str) -
     """
     Convert a provider title to its equivalent media API title.
 
-    This function takes a title from a specific provider (e.g., "1P" from allanime)
-    and converts it to the standard media API title (e.g., "one piece").
+    This function takes a title from a specific provider (e.g., "My Star" from
+    HiAnime) and converts it to the standard media API title (e.g., "Oshi no Ko").
 
     Args:
         provider_title: The title as it appears on the provider
-        provider_name: The name of the provider (e.g., "allanime", "hianime", "animepahe")
+        provider_name: The name of the provider (e.g., "hianime", "animeunity")
 
     Returns:
         The normalized media API title, or the original title if no mapping exists
 
     Example:
-        >>> provider_title_to_media_api_title("1P", "allanime")
-        "one piece"
         >>> provider_title_to_media_api_title("My Star", "hianime")
         "Oshi no Ko"
-        >>> provider_title_to_media_api_title("Unknown Title", "allanime")
+        >>> provider_title_to_media_api_title("Unknown Title", "hianime")
         "Unknown Title"
     """
     try:
@@ -128,17 +126,15 @@ def media_api_title_to_provider_title(media_api_title: str, provider_name: str) 
 
     Args:
         media_api_title: The title as it appears in the media API (e.g., AniList)
-        provider_name: The name of the provider (e.g., "allanime", "hianime", "animepahe")
+        provider_name: The name of the provider (e.g., "hianime", "animeunity")
 
     Returns:
         The provider-specific title, or the original title if no mapping exists
 
     Example:
-        >>> media_api_title_to_provider_title("one piece", "allanime")
-        "1P"
         >>> media_api_title_to_provider_title("Oshi no Ko", "hianime")
         "My Star"
-        >>> media_api_title_to_provider_title("Unknown Title", "allanime")
+        >>> media_api_title_to_provider_title("Unknown Title", "hianime")
         "Unknown Title"
     """
     try:
@@ -191,10 +187,10 @@ def normalize_title(
         The normalized title
 
     Example:
-        >>> normalize_title_for_search("one piece", "allanime", use_provider_mapping=True)
-        "1P"
-        >>> normalize_title_for_search("1P", "allanime", use_provider_mapping=False)
-        "one piece"
+        >>> normalize_title("Oshi no Ko", "hianime", use_provider_mapping=True)
+        "My Star"
+        >>> normalize_title("My Star", "hianime", use_provider_mapping=False)
+        "Oshi no Ko"
     """
     if use_provider_mapping:
         return media_api_title_to_provider_title(title, provider_name)
@@ -210,8 +206,8 @@ def get_available_providers() -> list[str]:
         List of provider names that have mappings defined
 
     Example:
-        >>> get_available_providers()
-        ['allanime', 'hianime', 'animepahe']
+        >>> "hianime" in get_available_providers()
+        True
     """
     try:
         normalizer_data = _load_normalizer_data()
@@ -244,9 +240,9 @@ def get_provider_mappings(provider_name: str) -> Dict[str, str]:
         Dictionary mapping provider titles to media API titles
 
     Example:
-        >>> mappings = get_provider_mappings("allanime")
-        >>> print(mappings["1P"])
-        "one piece"
+        >>> mappings = get_provider_mappings("hianime")
+        >>> print(mappings["My Star"])
+        "Oshi no Ko"
     """
     try:
         normalizer_data = _load_normalizer_data()
@@ -270,11 +266,11 @@ def has_mapping(title: str, provider_name: str, reverse: bool = False) -> bool:
         True if a mapping exists, False otherwise
 
     Example:
-        >>> has_mapping("1P", "allanime", reverse=False)
+        >>> has_mapping("My Star", "hianime", reverse=False)
         True
-        >>> has_mapping("one piece", "allanime", reverse=True)
+        >>> has_mapping("Oshi no Ko", "hianime", reverse=True)
         True
-        >>> has_mapping("Unknown Title", "allanime", reverse=False)
+        >>> has_mapping("Unknown Title", "hianime", reverse=False)
         False
     """
     try:
@@ -316,8 +312,8 @@ def add_runtime_mapping(
         the cache is cleared or the application restarts.
 
     Example:
-        >>> add_runtime_mapping("Custom Title", "Normalized Title", "allanime")
-        >>> provider_title_to_media_api_title("Custom Title", "allanime")
+        >>> add_runtime_mapping("Custom Title", "Normalized Title", "hianime")
+        >>> provider_title_to_media_api_title("Custom Title", "hianime")
         "Normalized Title"
     """
     try:
