@@ -11,6 +11,7 @@ class ProviderName(Enum):
     ALLANIME = "allanime"
     ANIMEPAHE = "animepahe"
     HIANIME = "hianime"
+    ANIPUB = "anipub"
     ANIMEUNITY = "animeunity"
 
 
