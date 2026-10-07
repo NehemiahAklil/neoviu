@@ -380,6 +380,48 @@ viu search -t "Attack on Titan" -r ":"
 viu search -t "My Hero Academia" -r "-1"
 ```
 
+### Providers and Live-Site Restrictions
+
+HiAnime is the default provider. Use `--provider` to choose another supported source; external websites can still become unavailable or restrict requests.
+
+| Provider | Support |
+| --- | --- |
+| `hianime` | Uses ZokoAnime, with MegaPlay as a fallback. Supports sub/dub server selection, subtitles, and HLS resolutions such as 800p. |
+| `anipub` | Uses AniPub's catalogue and MegaPlay streams. Supports sub/dub selection, subtitles, and both current and legacy episode links. |
+| `animeunity` | Supports search, episode listings, and MP4 streams from the Italian-language service. |
+
+AllAnime, AnimePahe, Nyaa, and Yugen have been removed rather than kept as non-working choices. When loading an older configuration, Viu replaces a removed provider with HiAnime and retired server preferences with `TOP`, and displays a migration notice. It leaves the file unchanged until you run `viu config --update`; explicit command-line selections of removed providers are rejected.
+
+The HiAnime implementation independently follows the current protocols documented by [ani-cli](https://github.com/pystardust/ani-cli). AniPub follows the catalogue and MegaPlay protocols used by [curd's AniPub provider](https://github.com/Wraient/curd/tree/main/internal/providers/anipub), sharing the existing MegaPlay extractor with HiAnime. Neither requires additional runtime dependencies.
+
+Choose a provider explicitly when another site is unavailable. Episode ranges use zero-based indices, so `0:1` selects only the first episode:
+
+```bash
+viu --provider hianime search -t "Naruto" -r "0:1"
+
+# Select the alternative HiAnime host explicitly.
+viu --provider hianime --server megaplay search -t "Naruto" -r "0:1"
+
+# Use the additional AniPub catalogue, including dubbed episodes.
+viu --provider anipub --translation-type dub search -t "Death Note" -r "0:1"
+```
+
+Quality preferences accept positive numeric values, including nonstandard upstream resolutions such as `--quality 800`. If the preferred quality is unavailable, Viu selects the provider's top-ranked stream without changing your saved preference.
+
+Provider regression tests use synthetic responses and do not require network access:
+
+```bash
+uv run pytest tests/libs/provider tests/libs/player/mpv tests/cli/interactive tests/cli/commands/test_cli_stream_quality.py
+```
+
+The optional live tests check Naruto, Death Note, and One Punch Man across all supported providers. They verify search results, episode details, stream extraction, and a small MP4 or HLS prefix without launching a player or downloading an episode:
+
+```bash
+VIU_LIVE_TESTS=1 uv run pytest -m integration tests/libs/provider/anime/test_live.py
+```
+
+Live tests fail when a site blocks requests or returns unusable streams. The default test run skips these checks, so offline test success must not be interpreted as proof that an upstream site is available.
+
 ### Local Data Management (`viu registry`)
 
 Viu maintains a local database of your anime for offline access and enhanced performance.
@@ -399,7 +441,7 @@ Viu is highly customizable. A default configuration file with detailed comments 
 - **Edit in your default editor:** `viu config`
 - **Use the interactive wizard:** `viu config --interactive`
 
-Most settings in the config file can be temporarily overridden with command-line flags (e.g., `viu --provider animepahe anilist`).
+Most settings in the config file can be temporarily overridden with command-line flags (e.g., `viu --provider animeunity anilist`).
 
 <details>
   <summary><b>Default Configuration (`config.ini`) Explained</b></summary>
@@ -407,7 +449,7 @@ Most settings in the config file can be temporarily overridden with command-line
 ```ini
 # [general] Section: Controls overall application behavior.
 [general]
-provider = allanime          ; The default anime provider (allanime, animepahe).
+provider = hianime           ; Anime provider: hianime, anipub, animeunity.
 selector = fzf               ; The interactive UI tool (fzf, rofi, default).
 preview = full               ; Preview type in selectors (full, text, image, none).
 image_renderer = icat        ; Tool for terminal image previews (icat, chafa).
@@ -418,7 +460,7 @@ auto_select_anime_result = True ; Automatically select the best search match.
 # [stream] Section: Controls playback and streaming.
 [stream]
 player = mpv                 ; The media player to use (mpv, vlc).
-quality = 1080               ; Preferred stream quality (1080, 720, 480, 360).
+quality = 1080               ; Preferred numeric stream quality (e.g. 1080, 800, 720, 480, 360).
 translation_type = sub       ; Preferred audio/subtitle type (sub, dub).
 auto_next = False            ; Automatically play the next episode.
 continue_from_watch_history = True ; Resume playback from where you left off.
