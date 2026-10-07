@@ -1,24 +1,80 @@
 import functools
 import logging
 import os
-from typing import Type
+from collections.abc import Callable, Iterator
+from contextlib import contextmanager
+from typing import ParamSpec, Type, TypeVar, cast
+
+from httpx import HTTPStatusError, RequestError
+
+from .....core.exceptions import (
+    ProviderAPIError,
+    ProviderError,
+    ProviderParsingError,
+)
 
 from ..base import BaseAnimeProvider
 
 logger = logging.getLogger(__name__)
 
+P = ParamSpec("P")
+R = TypeVar("R")
+T = TypeVar("T")
 
-def debug_provider(provider_function):
+
+@contextmanager
+def _provider_errors(provider_name: str) -> Iterator[None]:
+    if os.environ.get("VIU_DEBUG"):
+        yield
+        return
+
+    try:
+        yield
+    except ProviderError as error:
+        logger.error("[%s]: %s", provider_name, error)
+        raise
+    except HTTPStatusError as error:
+        status = error.response.status_code
+        details = error.response.reason_phrase
+        if status == 403:
+            details = (
+                "Access denied; the site may require browser verification. "
+                "Try another provider."
+            )
+        provider_error = ProviderAPIError(provider_name, status, details)
+        logger.error("%s", provider_error)
+        raise provider_error from error
+    except RequestError as error:
+        provider_error = ProviderAPIError(
+            provider_name,
+            details=f"Unable to contact the provider ({type(error).__name__}).",
+        )
+        logger.error("%s", provider_error)
+        raise provider_error from error
+    except (ValueError, KeyError, TypeError, AttributeError, IndexError) as error:
+        parsing_error = ProviderParsingError(
+            provider_name,
+            f"Unable to parse the provider response ({type(error).__name__}).",
+        )
+        logger.error("%s", parsing_error)
+        raise parsing_error from error
+
+
+def _provider_iterator(iterator: Iterator[T], provider_name: str) -> Iterator[T]:
+    with _provider_errors(provider_name):
+        yield from iterator
+
+
+def debug_provider(provider_function: Callable[P, R]) -> Callable[P, R]:
     @functools.wraps(provider_function)
-    def _provider_function_wrapper(self, *args, **kwargs):
-        provider_name = self.__class__.__name__.upper()
-        if not os.environ.get("VIU_DEBUG"):
-            try:
-                return provider_function(self, *args, **kwargs)
-            except Exception as e:
-                logger.error(f"[{provider_name}@{provider_function.__name__}]: {e}")
-        else:
-            return provider_function(self, *args, **kwargs)
+    def _provider_function_wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
+        provider_name = type(args[0]).__name__
+        with _provider_errors(provider_name):
+            result = provider_function(*args, **kwargs)
+        # Stream generators make their requests during iteration, not construction.
+        if isinstance(result, Iterator):
+            return cast(R, _provider_iterator(result, provider_name))
+        return result
 
     return _provider_function_wrapper
 

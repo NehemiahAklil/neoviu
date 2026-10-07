@@ -9,6 +9,7 @@ import click
 
 from ...core.config import AppConfig
 from ...core.constants import APP_DIR, USER_CONFIG
+from ...core.exceptions import ProviderError
 from ...core.utils.concurrency import thread_manager
 from .state import InternalDirective, MenuName, State
 
@@ -281,9 +282,17 @@ class Session:
         while self._history:
             current_state = self._history[-1]
 
-            next_step = self._menus[current_state.menu_name].execute(
-                self._context, current_state
-            )
+            try:
+                next_step = self._menus[current_state.menu_name].execute(
+                    self._context, current_state
+                )
+            except ProviderError as error:
+                self._context.feedback.error(str(error))
+                next_step = (
+                    InternalDirective.BACK
+                    if len(self._history) > 1
+                    else InternalDirective.EXIT
+                )
 
             if isinstance(next_step, InternalDirective):
                 if next_step == InternalDirective.MAIN:
@@ -330,7 +339,7 @@ class Session:
 
     def load_menus_from_folder(self, package: str):
         """Load menu modules from a subfolder.
-        
+
         Uses pkgutil to discover modules for regular Python, and falls back
         to the package's __all__ list for PyInstaller frozen executables.
         """
@@ -347,13 +356,14 @@ class Session:
         # Try pkgutil first (works in regular Python)
         package_path = getattr(parent_package, "__path__", None)
         module_names = []
-        
+
         if package_path:
             module_names = [
-                name for _, name, ispkg in pkgutil.iter_modules(package_path)
+                name
+                for _, name, ispkg in pkgutil.iter_modules(package_path)
                 if not ispkg and not name.startswith("_")
             ]
-        
+
         # Fallback to __all__ for PyInstaller frozen executables
         if not module_names:
             module_names = getattr(parent_package, "__all__", [])
@@ -366,9 +376,7 @@ class Session:
                 # which runs the @session.menu decorators
                 importlib.import_module(full_module_name)
             except Exception as e:
-                logger.error(
-                    f"Failed to load menu module '{full_module_name}': {e}"
-                )
+                logger.error(f"Failed to load menu module '{full_module_name}': {e}")
 
 
 # Create a single, global instance of the Session to be imported by menu modules.
