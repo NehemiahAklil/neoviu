@@ -1,27 +1,18 @@
 <p align="center">
-  <h1 align="center">Viu</h1>
+  <h1 align="center">neoviu</h1>
 </p>
 <p align="center">
   <sup>
-  Your browser anime experience, from the terminal.
+  A maintained fork of Viu: your browser anime experience, from the terminal.
   </sup>
 </p>
 <div align="center">
 
-[![PyPI - Version](https://img.shields.io/pypi/v/viu-media)](https://pypi.org/project/viu-media/)
-[![PyPI - Downloads](https://img.shields.io/pypi/dm/viu-media)](https://pypi.org/project/viu-media/)
-[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/viu-media/Viu/test.yml?label=Tests)](https://github.com/viu-media/Viu/actions)
-[![Discord](https://img.shields.io/discord/1250887070906323096?label=Discord&logo=discord)](https://discord.gg/HBEmAwvbHV)
-[![GitHub Issues](https://img.shields.io/github/issues/viu-media/Viu)](https://github.com/viu-media/Viu/issues)
-[![PyPI - License](https://img.shields.io/pypi/l/viu)](https://github.com/viu-media/Viu/blob/master/LICENSE)
+[![Fork of viu-media/viu](https://img.shields.io/badge/fork%20of-viu--media%2Fviu-blue?logo=github)](https://github.com/viu-media/viu)
+[![Last commit](https://img.shields.io/github/last-commit/NehemiahAklil/neoviu)](https://github.com/NehemiahAklil/neoviu/commits/master)
+[![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue)](LICENSE)
 
 </div>
-
-<p align="center">
-  <a href="https://discord.gg/HBEmAwvbHV">
-    <img src="https://invidget.switchblade.xyz/C4rhMA4mmK" alt="Discord Server Invite">
-  </a>
-</p>
 
 [viu-showcase.webm](https://github.com/user-attachments/assets/5da0ec87-7780-4310-9ca2-33fae7cadd5f)
 
@@ -54,6 +45,43 @@
 >
 > [**Read the Full Disclaimer**](DISCLAIMER.md)
 
+## About neoviu
+
+neoviu continues [Viu](https://github.com/viu-media/viu), the terminal anime client created by [Benexl](https://github.com/Benexl) and its contributors. It keeps Viu's `viu` command, configuration file, and local data, so an existing Viu setup keeps working.
+
+### Why This Fork Exists
+
+We installed Viu, ran its tests, and tried to stream well-known titles such as Naruto, Death Note, and One Punch Man. The upstream project could no longer stream them:
+
+- The [upstream repository](https://github.com/viu-media/viu) is archived and read-only. Its last release is v3.5.0 (May 6, 2026), and its last commit (May 9, 2026) deleted the AllAnime, AnimePahe, and AnimeUnity packages while the CLI still offered all three as providers.
+- The provider registry also listed HiAnime, Nyaa, and Yugen, which had no implementation in the upstream code.
+- AllAnime changed its API, and curd deprecated its own AllAnime provider instead of fixing it. AnimePahe now requires DDoS-Guard browser verification, which a terminal HTTP client can't pass.
+- None of the upstream branches had provider fixes newer than the default branch.
+
+The archived repository can't accept fixes, so we forked it as neoviu.
+
+### How We Found Working Providers
+
+We studied two actively maintained terminal anime clients to learn which sites still work and how they serve streams:
+
+- [ani-cli](https://github.com/pystardust/ani-cli) scrapes HiAnime. Its current search, episode, and server flow, including the ZokoAnime and MegaPlay embeds, is the basis of neoviu's `hianime` provider.
+- [curd](https://github.com/Wraient/curd) supports several catalogues. Its AniPub provider, which pairs the anipub.xyz catalogue with MegaPlay streams, is the basis of neoviu's `anipub` provider.
+
+We also looked at [Seanime](https://github.com/5rahim/seanime), but it's a self-hosted media server rather than a streaming source, so it doesn't fit as a provider.
+
+ani-cli and curd are GPL-3.0 projects, while neoviu stays in the public domain under the Unlicense. For that reason, neoviu reimplements the site protocols they document in Python and doesn't copy their code.
+
+We then repaired AnimeUnity against its current site and removed every provider that no longer works, rather than leaving broken choices in the menus.
+
+### What's Different From Viu
+
+- **Working providers:** `hianime` (the default), `anipub`, and `animeunity`. See [Providers and Live-Site Restrictions](#providers-and-live-site-restrictions).
+- **Config migration:** Saved configurations that select a removed provider or server switch to HiAnime and `TOP`, with a notice.
+- **Any video height:** The quality setting accepts values such as `800`. When the preferred height is unavailable, neoviu plays the provider's top-ranked stream.
+- **Reliable playback:** MPV receives each provider header separately, and neoviu reports MPV errors instead of ignoring them.
+- **Clear provider errors:** Blocked or changed sites show an error and return to the previous menu instead of crashing the session.
+- **Tests:** Offline regression tests cover every provider, and optional live tests check real streams.
+
 ## Core Features
 
 - 📺 **Interactive TUI:** Browse, search, and manage your AniList library in a rich terminal interface powered by `fzf`, `rofi`, or a built-in selector.
@@ -66,7 +94,10 @@
 
 ## Installation
 
-Viu runs on Windows, macOS, Linux, and Android (via Termux). Pre-built binaries are available for quick installation without Python, or you can install via Python 3.10+ package managers.
+neoviu runs on Windows, macOS, Linux, and Android (via Termux) with Python 3.10 or later. neoviu isn't published to PyPI, so install it directly from this repository. The package keeps the name `viu-media` and installs the same `viu` command.
+
+> [!WARNING]
+> The `viu-media` package on PyPI, the AUR packages, the upstream Nix flake, and the upstream release binaries install the archived Viu without neoviu's provider fixes. If you installed Viu one of those ways, uninstall it first, for example with `uv tool uninstall viu-media`.
 
 ### Prerequisites
 
@@ -81,67 +112,39 @@ For the best experience, please install these external tools:
   - [**ffmpeg**](https://www.ffmpeg.org/) - Required for downloading HLS streams and merging subtitles.
   - [**webtorrent-cli**](https://github.com/webtorrent/webtorrent-cli) - For streaming torrents directly.
 
-### Pre-built Binaries (Recommended for Quick Start)
-
-The easiest way to get started is to download a pre-built, self-contained binary from the [**releases page**](https://github.com/viu-media/viu/releases/latest). These binaries include all dependencies and **do not require Python** to be installed.
-
-**Available for:**
-
-- **Linux** (x86_64): `viu-linux-x86_64`
-- **Windows** (x86_64): `viu-windows-x86_64.exe`
-- **macOS** (Intel x86_64): `viu-macos-x86_64`
-- **macOS** (Apple Silicon ARM64): `viu-macos-arm64`
-
-**Installation Steps:**
-
-1. Download the appropriate binary for your platform from the [**releases page**](https://github.com/viu-media/viu/releases/latest).
-2. **Linux/macOS:** Make it executable:
-
-    ```bash
-    # Replace with the actual binary name you downloaded
-    chmod +x viu-linux-x86_64
-    ```
-
-    Then move it to a directory in your PATH:
-
-    ```bash
-    # Option 1: System-wide installation (requires sudo)
-    sudo mv viu-linux-x86_64 /usr/local/bin/viu
-
-    # Option 2: User directory installation
-    mkdir -p ~/.local/bin
-    mv viu-linux-x86_64 ~/.local/bin/viu
-    # Make sure ~/.local/bin is in your PATH
-    ```
-
-    **Windows:** Simply rename `viu-windows-x86_64.exe` to `viu.exe` and place it in a directory in your PATH, or run it directly.
-
-3. Verify the installation:
-
-    ```bash
-    viu --version
-    ```
-
 ### Recommended Installation (uv)
 
-The best way to install Viu is with [**uv**](https://github.com/astral-sh/uv), a lightning-fast Python package manager.
+The best way to install neoviu is with [**uv**](https://github.com/astral-sh/uv), a lightning-fast Python package manager.
 
 ```bash
 # Install with all optional features for the full experience
-uv tool install "viu-media[standard]"
+uv tool install "viu-media[standard] @ git+https://github.com/NehemiahAklil/neoviu.git"
 
 # Or, pick and choose the extras you need:
-uv tool install viu-media  # Core functionality only
-uv tool install "viu-media[download]"  # For advanced downloading with yt-dlp
-uv tool install "viu-media[discord]"   # For Discord Rich Presence
-uv tool install "viu-media[notifications]" # For desktop notifications
+uv tool install "viu-media @ git+https://github.com/NehemiahAklil/neoviu.git"  # Core functionality only
+uv tool install "viu-media[download] @ git+https://github.com/NehemiahAklil/neoviu.git"  # For advanced downloading with yt-dlp
+uv tool install "viu-media[discord] @ git+https://github.com/NehemiahAklil/neoviu.git"   # For Discord Rich Presence
+uv tool install "viu-media[notifications] @ git+https://github.com/NehemiahAklil/neoviu.git" # For desktop notifications
 ```
+
+To update neoviu to the latest commit, run the same install command with `--reinstall`:
+
+```bash
+uv tool install --reinstall "viu-media[standard] @ git+https://github.com/NehemiahAklil/neoviu.git"
+```
+
+### Pre-built Binaries
+
+neoviu doesn't publish pre-built binaries yet. The binaries on the [upstream releases page](https://github.com/viu-media/viu/releases/latest) are builds of the archived Viu and don't include neoviu's provider fixes.
 
 ### Other Installation Methods
 
 <details>
   <summary><b>Platform-Specific and Alternative Installers</b></summary>
   
+> [!NOTE]
+> The Nix and AUR commands below install the archived upstream Viu, not neoviu. Use the Termux, pipx, or pip instructions to install neoviu.
+
 #### Nix / NixOS
 
 ##### Ephemeral / One-Off Run (No Installation)
@@ -199,8 +202,9 @@ pip install pydantic --extra-index-url https://termux-user-repository.github.io/
 # the above will take a while if you want to see more output and feel like sth is happening lol
 pip install pydantic --extra-index-url https://termux-user-repository.github.io/pypi/ -v
 
-# now you can install viu
-pip install viu-media
+# now you can install neoviu (git is required to install from the repository)
+pkg install git
+pip install "viu-media @ git+https://github.com/NehemiahAklil/neoviu.git"
 
 # === optional deps ===
 # if you have reach here awesome lol :)
@@ -245,7 +249,8 @@ pkg install chafa
 # search for mpv or vlc (recommended, since has nicer ui)
 # the only limitation is currently its not possible to pass headers to the android players
 # through android intents
-# so use servers like sharepoint and wixmp
+# hianime and anipub streams need a Referer header, so use animeunity
+# (italian-language) for streaming on android
 # though this is not an issue when it comes to downloading ;)
 # if you have installed using 'pkg' uninstall it
 
@@ -259,13 +264,13 @@ pkg install chafa
 #### Using pipx (for isolated environments)
 
 ```bash
-pipx install "viu-media[standard]"
+pipx install "viu-media[standard] @ git+https://github.com/NehemiahAklil/neoviu.git"
 ```
 
 #### Using pip
 
 ```bash
-pip install "viu-media[standard]"
+pip install "viu-media[standard] @ git+https://github.com/NehemiahAklil/neoviu.git"
 ```
 
 </details>
@@ -276,8 +281,8 @@ pip install "viu-media[standard]"
   Requires [Git](https://git-scm.com/), [Python 3.10+](https://www.python.org/), and [uv](https://astral.sh/blog/uv).
 
   ```bash
-  git clone https://github.com/viu-media/Viu.git --depth 1
-  cd Viu
+  git clone https://github.com/NehemiahAklil/neoviu.git --depth 1
+  cd neoviu
   uv tool install .
   viu --version
   ```
@@ -311,7 +316,7 @@ Get up and running in three simple steps:
 
 ### The Interactive TUI (`viu anilist`)
 
-This is the main, user-friendly way to use Viu. It provides a rich terminal experience where you can:
+This is the main, user-friendly way to use neoviu. It provides a rich terminal experience where you can:
 
 - Browse trending, popular, and seasonal anime.
 - Manage your personal lists (Watching, Completed, Paused, etc.).
@@ -336,7 +341,7 @@ viu anilist search -t "Demon Slayer" --dump-json
 
 ### Background Downloads (`viu queue` & `worker`)
 
-Viu includes a robust background downloading system.
+neoviu includes a robust background downloading system.
 
 1. **Add episodes to the queue:**
 
@@ -390,7 +395,7 @@ HiAnime is the default provider. Use `--provider` to choose another supported so
 | `anipub` | Uses AniPub's catalogue and MegaPlay streams. Supports sub/dub selection, subtitles, and both current and legacy episode links. |
 | `animeunity` | Supports search, episode listings, and MP4 streams from the Italian-language service. |
 
-AllAnime, AnimePahe, Nyaa, and Yugen have been removed rather than kept as non-working choices. When loading an older configuration, Viu replaces a removed provider with HiAnime and retired server preferences with `TOP`, and displays a migration notice. It leaves the file unchanged until you run `viu config --update`; explicit command-line selections of removed providers are rejected.
+AllAnime, AnimePahe, Nyaa, and Yugen have been removed rather than kept as non-working choices. When loading an older configuration, neoviu replaces a removed provider with HiAnime and retired server preferences with `TOP`, and displays a migration notice. It leaves the file unchanged until you run `viu config --update`; explicit command-line selections of removed providers are rejected.
 
 The HiAnime implementation independently follows the current protocols documented by [ani-cli](https://github.com/pystardust/ani-cli). AniPub follows the catalogue and MegaPlay protocols used by [curd's AniPub provider](https://github.com/Wraient/curd/tree/main/internal/providers/anipub), sharing the existing MegaPlay extractor with HiAnime. Neither requires additional runtime dependencies.
 
@@ -406,7 +411,7 @@ viu --provider hianime --server megaplay search -t "Naruto" -r "0:1"
 viu --provider anipub --translation-type dub search -t "Death Note" -r "0:1"
 ```
 
-Quality preferences accept positive numeric values, including nonstandard upstream resolutions such as `--quality 800`. If the preferred quality is unavailable, Viu selects the provider's top-ranked stream without changing your saved preference.
+Quality preferences accept positive numeric values, including nonstandard upstream resolutions such as `--quality 800`. If the preferred quality is unavailable, neoviu selects the provider's top-ranked stream without changing your saved preference.
 
 Provider regression tests use synthetic responses and do not require network access:
 
@@ -424,7 +429,7 @@ Live tests fail when a site blocks requests or returns unusable streams. The def
 
 ### Local Data Management (`viu registry`)
 
-Viu maintains a local database of your anime for offline access and enhanced performance.
+neoviu maintains a local database of your anime for offline access and enhanced performance.
 
 - `registry sync`: Synchronize your local data with your remote AniList account.
 - `registry stats`: Show detailed statistics about your viewing habits.
@@ -435,7 +440,7 @@ Viu maintains a local database of your anime for offline access and enhanced per
 
 ## Configuration
 
-Viu is highly customizable. A default configuration file with detailed comments is created on the first run.
+neoviu is highly customizable. A default configuration file with detailed comments is created on the first run.
 
 - **Find your config file:** `viu config --path`
 - **Edit in your default editor:** `viu config`
@@ -490,7 +495,7 @@ download_check_interval = 5      ; How often to process the download queue (minu
 
 ### MPV IPC Integration
 
-When `use_ipc = True` is set in your config, Viu provides powerful in-player controls without needing to close MPV.
+When `use_ipc = True` is set in your config, neoviu provides powerful in-player controls without needing to close MPV.
 
 **Key Bindings:**
 
@@ -513,7 +518,7 @@ You can run the background worker as a systemd service for persistence.
 
     ```ini
     [Unit]
-    Description=Viu Background Worker
+    Description=neoviu Background Worker
     After=network-online.target
 
     [Service]
@@ -535,10 +540,20 @@ You can run the background worker as a systemd service for persistence.
     systemctl --user enable --now viu-worker.service
     ```
 
-## Project using it
+## Projects Using Viu
 
 **[Inazuma](https://github.com/viu-media/Inazuma)** - official gui wrapper over viu built in kivymd
 
 ## Contributing
 
 Contributions are welcome! Whether it's reporting a bug, proposing a feature, or writing code, your help is appreciated. Please read our [**Contributing Guidelines**](CONTRIBUTIONS.md) to get started.
+
+## Credits
+
+neoviu builds on the work of these projects:
+
+- **[Viu](https://github.com/viu-media/viu)** by [Benexl](https://github.com/Benexl) and its contributors is the foundation of neoviu. The interactive TUI, AniList integration, local registry, downloader, and nearly everything outside the providers come from Viu, which is released under the Unlicense.
+- **[ani-cli](https://github.com/pystardust/ani-cli)** by [pystardust](https://github.com/pystardust) and its contributors documents the current HiAnime, ZokoAnime, and MegaPlay flow that the `hianime` provider follows.
+- **[curd](https://github.com/Wraient/curd)** by [Wraient](https://github.com/Wraient) and its contributors documents the AniPub catalogue and MegaPlay stream decryption that the `anipub` provider follows.
+
+ani-cli and curd are licensed under GPL-3.0. neoviu reimplements the site protocols they document and doesn't include their code. Thank you to everyone who builds and maintains these projects.
