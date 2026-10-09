@@ -1,5 +1,5 @@
 <p align="center">
-  <h1 align="center">neoviu</h1>
+  <h1 align="center">nviu</h1>
 </p>
 <p align="center">
   <sup>
@@ -47,7 +47,10 @@
 
 ## About neoviu
 
-neoviu continues [Viu](https://github.com/viu-media/viu), the terminal anime client created by [Benexl](https://github.com/Benexl) and its contributors. It keeps Viu's `viu` command, configuration file, and local data, so an existing Viu setup keeps working.
+nviu continues [Viu](https://github.com/viu-media/viu), the terminal anime client created by [Benexl](https://github.com/Benexl) and its contributors. nviu installs the `nviu` command. On its first run it copies your existing Viu configuration, logins, and local data, so an existing Viu setup carries over.
+
+> [!NOTE]
+> nviu is in alpha (currently `0.0.8a1`). Expect rough edges, and please report issues.
 
 ### Why This Fork Exists
 
@@ -58,18 +61,18 @@ We installed Viu, ran its tests, and tried to stream well-known titles such as N
 - AllAnime changed its API, and curd deprecated its own AllAnime provider instead of fixing it. AnimePahe now requires DDoS-Guard browser verification, which a terminal HTTP client can't pass.
 - None of the upstream branches had provider fixes newer than the default branch.
 
-The archived repository can't accept fixes, so we forked it as neoviu.
+The archived repository can't accept fixes, so we forked it as nviu.
 
 ### How We Found Working Providers
 
 We studied two actively maintained terminal anime clients to learn which sites still work and how they serve streams:
 
-- [ani-cli](https://github.com/pystardust/ani-cli) scrapes HiAnime. Its current search, episode, and server flow, including the ZokoAnime and MegaPlay embeds, is the basis of neoviu's `hianime` provider.
-- [curd](https://github.com/Wraient/curd) supports several catalogues. Its AniPub provider, which pairs the anipub.xyz catalogue with MegaPlay streams, is the basis of neoviu's `anipub` provider.
+- [ani-cli](https://github.com/pystardust/ani-cli) scrapes HiAnime. Its current search, episode, and server flow, including the ZokoAnime and MegaPlay embeds, is the basis of nviu's `hianime` provider.
+- [curd](https://github.com/Wraient/curd) supports several catalogues. Its AniPub provider, which pairs the anipub.xyz catalogue with MegaPlay streams, is the basis of nviu's `anipub` provider.
 
 We also looked at [Seanime](https://github.com/5rahim/seanime), but it's a self-hosted media server rather than a streaming source, so it doesn't fit as a provider.
 
-ani-cli and curd are GPL-3.0 projects, while neoviu stays in the public domain under the Unlicense. For that reason, neoviu reimplements the site protocols they document in Python and doesn't copy their code.
+ani-cli and curd are GPL-3.0 projects, while nviu stays in the public domain under the Unlicense. For that reason, nviu reimplements the site protocols they document in Python and doesn't copy their code.
 
 We then repaired AnimeUnity against its current site and removed every provider that no longer works, rather than leaving broken choices in the menus.
 
@@ -77,11 +80,11 @@ We then repaired AnimeUnity against its current site and removed every provider 
 
 - **Working providers:** `hianime` (the default), `anipub`, and `animeunity`. See [Providers and Live-Site Restrictions](#providers-and-live-site-restrictions).
 - **Config migration:** Saved configurations that select a removed provider or server switch to HiAnime and `TOP`, with a notice.
-- **Any video height:** The quality setting accepts values such as `800`. When the preferred height is unavailable, neoviu plays the provider's top-ranked stream.
-- **Reliable playback:** MPV receives each provider header separately, and neoviu reports MPV errors instead of ignoring them.
+- **Any video height:** The quality setting accepts values such as `800`. When the preferred height is unavailable, nviu plays the provider's top-ranked stream.
+- **Reliable playback:** MPV receives each provider header separately, and nviu reports MPV errors instead of ignoring them.
 - **Clear provider errors:** Blocked or changed sites show an error and return to the previous menu instead of crashing the session.
-- **Grid interface:** `viu tui` shows menus as tiles and anime as cover-art grids. See [The Grid Interface](#the-grid-interface-viu-tui).
-- **AniList and MyAnimeList tracking:** As in curd, you choose where progress is synced: AniList, MyAnimeList, both, or neither. neoviu prompts you to log in and updates your list as you watch. See [Tracking Your Progress](#tracking-your-progress-viu-tracker).
+- **Grid interface:** `nviu tui` shows menus as tiles and anime as cover-art grids. See [The Grid Interface](#the-grid-interface-nviu-tui).
+- **AniList and MyAnimeList tracking:** As in curd, you choose where progress is synced: AniList, MyAnimeList, both, or neither. nviu prompts you to log in and updates your list as you watch. See [Tracking Your Progress](#tracking-your-progress-nviu-tracker).
 - **Tests:** Offline regression tests cover every provider, and optional live tests check real streams.
 
 ## Core Features
@@ -98,10 +101,10 @@ We then repaired AnimeUnity against its current site and removed every provider 
 
 ## Installation
 
-neoviu runs on Windows, macOS, Linux, and Android (via Termux) with Python 3.11 or later. neoviu isn't published to PyPI, so install it directly from this repository. The package keeps the name `viu-media` and installs the same `viu` command.
+nviu runs on Windows, macOS, Linux, and Android (via Termux) with Python 3.11 or later. nviu isn't published to PyPI, so install it directly from this repository. The package is named `nviu` and installs the `nviu` command.
 
 > [!WARNING]
-> The `viu-media` package on PyPI, the AUR packages, the upstream Nix flake, and the upstream release binaries install the archived Viu without neoviu's provider fixes. If you installed Viu one of those ways, uninstall it first, for example with `uv tool uninstall viu-media`.
+> The `viu-media` package on PyPI, the AUR packages, the upstream Nix flake, and the upstream release binaries install the archived Viu without nviu's provider fixes. If you installed Viu one of those ways, uninstall it first, for example with `uv tool uninstall viu-media`.
 
 ### Prerequisites
 
@@ -118,7 +121,7 @@ For the best experience, please install these external tools:
 
 ### Quick Install (recommended)
 
-The install script sets up [**uv**](https://github.com/astral-sh/uv) (and a compatible Python, if needed), installs neoviu with all features including the grid interface, puts `viu` on your PATH, and tells you which external tools are missing.
+The install script sets up [**uv**](https://github.com/astral-sh/uv) (and a compatible Python, if needed), installs nviu with all features including the grid interface, puts `nviu` on your PATH, and tells you which external tools are missing.
 
 **Linux, macOS, and Termux:**
 
@@ -132,7 +135,7 @@ curl -fsSL https://raw.githubusercontent.com/NehemiahAklil/neoviu/master/install
 powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/NehemiahAklil/neoviu/master/install.ps1 | iex"
 ```
 
-Run the same command again to update to the latest version. Then open a new terminal and run `viu --help`.
+Run the same command again to update to the latest version. Then open a new terminal and run `nviu --help`.
 
 The script accepts a few options (on Windows, download `install.ps1` and use `-Ref`, `-Extras`, `-Local`, `-Editable`):
 
@@ -154,11 +157,11 @@ Running the script from inside a checkout installs that checkout, including unco
 ```bash
 git clone https://github.com/NehemiahAklil/neoviu.git
 cd neoviu
-./install.sh             # installs this checkout as the `viu` command
+./install.sh             # installs this checkout as the `nviu` command
 ./install.sh --editable  # same, but code edits take effect without reinstalling
 ```
 
-You can also run neoviu without installing it: `uv run viu --help`.
+You can also run nviu without installing it: `uv run nviu --help`.
 
 ### Manual Install (uv)
 
@@ -166,27 +169,27 @@ If you'd rather run the commands yourself:
 
 ```bash
 # Install with all optional features for the full experience
-uv tool install "viu-media[standard,tui] @ git+https://github.com/NehemiahAklil/neoviu.git"
+uv tool install "nviu[standard,tui] @ git+https://github.com/NehemiahAklil/neoviu.git"
 
 # Or, pick and choose the extras you need:
-uv tool install "viu-media @ git+https://github.com/NehemiahAklil/neoviu.git"  # Core functionality only
-uv tool install "viu-media[download] @ git+https://github.com/NehemiahAklil/neoviu.git"  # For advanced downloading with yt-dlp
-uv tool install "viu-media[discord] @ git+https://github.com/NehemiahAklil/neoviu.git"   # For Discord Rich Presence
-uv tool install "viu-media[notifications] @ git+https://github.com/NehemiahAklil/neoviu.git" # For desktop notifications
-uv tool install "viu-media[tui] @ git+https://github.com/NehemiahAklil/neoviu.git"       # For the grid interface (viu tui)
+uv tool install "nviu @ git+https://github.com/NehemiahAklil/neoviu.git"  # Core functionality only
+uv tool install "nviu[download] @ git+https://github.com/NehemiahAklil/neoviu.git"  # For advanced downloading with yt-dlp
+uv tool install "nviu[discord] @ git+https://github.com/NehemiahAklil/neoviu.git"   # For Discord Rich Presence
+uv tool install "nviu[notifications] @ git+https://github.com/NehemiahAklil/neoviu.git" # For desktop notifications
+uv tool install "nviu[tui] @ git+https://github.com/NehemiahAklil/neoviu.git"       # For the grid interface (nviu tui)
 ```
 
-To update neoviu to the latest commit, run the same install command with `--reinstall`:
+To update nviu to the latest commit, run the same install command with `--reinstall`:
 
 ```bash
-uv tool install --reinstall "viu-media[standard,tui] @ git+https://github.com/NehemiahAklil/neoviu.git"
+uv tool install --reinstall "nviu[standard,tui] @ git+https://github.com/NehemiahAklil/neoviu.git"
 ```
 
-To uninstall: `uv tool uninstall viu-media`.
+To uninstall: `uv tool uninstall nviu`.
 
 ### Pre-built Binaries
 
-neoviu doesn't publish pre-built binaries yet. The binaries on the [upstream releases page](https://github.com/viu-media/viu/releases/latest) are builds of the archived Viu and don't include neoviu's provider fixes.
+nviu doesn't publish pre-built binaries yet. The binaries on the [upstream releases page](https://github.com/viu-media/viu/releases/latest) are builds of the archived Viu and don't include nviu's provider fixes.
 
 ### Other Installation Methods
 
@@ -194,7 +197,7 @@ neoviu doesn't publish pre-built binaries yet. The binaries on the [upstream rel
   <summary><b>Platform-Specific and Alternative Installers</b></summary>
   
 > [!NOTE]
-> The Nix and AUR commands below install the archived upstream Viu, not neoviu. Use the Termux, pipx, or pip instructions to install neoviu.
+> The Nix and AUR commands below install the archived upstream Viu, not nviu. Use the Termux, pipx, or pip instructions to install nviu.
 
 #### Nix / NixOS
 
@@ -253,9 +256,9 @@ pip install pydantic --extra-index-url https://termux-user-repository.github.io/
 # the above will take a while if you want to see more output and feel like sth is happening lol
 pip install pydantic --extra-index-url https://termux-user-repository.github.io/pypi/ -v
 
-# now you can install neoviu (git is required to install from the repository)
+# now you can install nviu (git is required to install from the repository)
 pkg install git
-pip install "viu-media @ git+https://github.com/NehemiahAklil/neoviu.git"
+pip install "nviu @ git+https://github.com/NehemiahAklil/neoviu.git"
 
 # === optional deps ===
 # if you have reach here awesome lol :)
@@ -286,11 +289,11 @@ pkg install libxml2 libxslt
 pkg install fzf
 
 # then enable fzf in the config
-viu --selector fzf config --update
+nviu --selector fzf config --update
 
 # if you want previews as well specify preview option
 # though images arent that pretty lol, so you can stick to text over full
-viu --preview text config --update
+nviu --preview text config --update
 
 # if you set preview to full you need a terminal image renderer
 pkg install chafa
@@ -315,13 +318,13 @@ pkg install chafa
 #### Using pipx (for isolated environments)
 
 ```bash
-pipx install "viu-media[standard] @ git+https://github.com/NehemiahAklil/neoviu.git"
+pipx install "nviu[standard] @ git+https://github.com/NehemiahAklil/neoviu.git"
 ```
 
 #### Using pip
 
 ```bash
-pip install "viu-media[standard] @ git+https://github.com/NehemiahAklil/neoviu.git"
+pip install "nviu[standard] @ git+https://github.com/NehemiahAklil/neoviu.git"
 ```
 
 </details>
@@ -335,13 +338,13 @@ pip install "viu-media[standard] @ git+https://github.com/NehemiahAklil/neoviu.g
   git clone https://github.com/NehemiahAklil/neoviu.git --depth 1
   cd neoviu
   ./install.sh   # or: uv tool install ".[standard,tui]"
-  viu --version
+  nviu --version
   ```
 
 </details>
 
 > [!TIP]
-> Enable shell completions for a much better experience by running `viu completions` and following the on-screen instructions for your shell.
+> Enable shell completions for a much better experience by running `nviu completions` and following the on-screen instructions for your shell.
 
 ## Getting Started: Quick Start
 
@@ -350,25 +353,25 @@ Get up and running in three simple steps:
 1. **Connect your anime list:**
 
     ```bash
-    viu tracker login
+    nviu tracker login
     ```
 
-    neoviu asks whether to sync with AniList, MyAnimeList, both, or neither, then opens your browser to log in. You can skip this step, because neoviu also offers to log you in the first time it needs your list. `viu anilist auth` still works for AniList.
+    nviu asks whether to sync with AniList, MyAnimeList, both, or neither, then opens your browser to log in. You can skip this step, because nviu also offers to log you in the first time it needs your list. `nviu anilist auth` still works for AniList.
 
 2. **Launch the interface:**
 
     ```bash
-    viu anilist   # the classic fzf/rofi menus
-    viu tui       # the grid interface (requires the tui extra)
+    nviu anilist   # the classic fzf/rofi menus
+    nviu tui       # the grid interface (requires the tui extra)
     ```
 
 3. **Browse & Play:** Use your arrow keys to navigate, select an anime, and choose an episode to stream instantly. Your progress is saved locally and synced to the sites you connected.
 
 ## Usage Guide
 
-### The Interactive TUI (`viu anilist`)
+### The Interactive TUI (`nviu anilist`)
 
-This is the main, user-friendly way to use neoviu. It provides a rich terminal experience where you can:
+This is the main, user-friendly way to use nviu. It provides a rich terminal experience where you can:
 
 - Browse trending, popular, and seasonal anime.
 - Manage your personal lists (Watching, Completed, Paused, etc.).
@@ -376,9 +379,9 @@ This is the main, user-friendly way to use neoviu. It provides a rich terminal e
 - View detailed information, characters, recommendations, reviews, and airing schedules.
 - Stream or download episodes directly from the menus.
 
-### The Grid Interface (`viu tui`)
+### The Grid Interface (`nviu tui`)
 
-The grid interface is a full-screen alternative to the selector menus, built with [Textual](https://github.com/Textualize/textual). It requires the `tui` extra. Start it with `viu tui`, or set `interface = "grid"` in the `[general]` config section to make `viu` and `viu anilist` open it by default.
+The grid interface is a full-screen alternative to the selector menus, built with [Textual](https://github.com/Textualize/textual). It requires the `tui` extra. Start it with `nviu tui`, or set `interface = "grid"` in the `[general]` config section to make `nviu` and `nviu anilist` open it by default.
 
 - **Home:** Tiles for Continue Watching, My Library, Search, Trending, Popular, Top Scored, Recently Updated, Upcoming, Most Favourited, Recently Watched, Random, Trackers, and the Classic Menu.
 - **Grids:** Anime appear as cards with cover art, format, episode count, score, and your list status.
@@ -403,16 +406,16 @@ Cover images render with [textual-image](https://github.com/lnqs/textual-image),
 | `Esc` | Anywhere | Go back |
 | `q` | Home | Quit |
 
-### Tracking Your Progress (`viu tracker`)
+### Tracking Your Progress (`nviu tracker`)
 
-neoviu always keeps your watch history locally. The `tracking.remote` setting decides which sites also receive status, progress, and score changes: `anilist` (the default), `myanimelist`, `both`, or `none`.
+nviu always keeps your watch history locally. The `tracking.remote` setting decides which sites also receive status, progress, and score changes: `anilist` (the default), `myanimelist`, `both`, or `none`.
 
 ```bash
-viu tracker                     # show which trackers are enabled and logged in
-viu tracker mode both           # sync to AniList and MyAnimeList
-viu tracker login               # log in to every enabled tracker
-viu tracker login myanimelist   # log in to one site
-viu tracker logout              # log out of both sites
+nviu tracker                     # show which trackers are enabled and logged in
+nviu tracker mode both           # sync to AniList and MyAnimeList
+nviu tracker login               # log in to every enabled tracker
+nviu tracker login myanimelist   # log in to one site
+nviu tracker logout              # log out of both sites
 ```
 
 Tracking works the same way in the classic menus and the grid interface:
@@ -420,54 +423,54 @@ Tracking works the same way in the classic menus and the grid interface:
 - Finishing an episode moves your progress forward.
 - An anime that isn't on your list yet is added as **Watching**.
 - Watching the last episode marks the anime **Completed**.
-- When a tracker you enabled isn't logged in, neoviu offers to log you in once per session. Set `tracking.prompt_login = false` to turn this prompt off.
+- When a tracker you enabled isn't logged in, nviu offers to log you in once per session. Set `tracking.prompt_login = false` to turn this prompt off.
 
 With both sites enabled, your lists come from AniList, and every change goes to both.
 
 #### Setting Up MyAnimeList
 
-MyAnimeList requires each user to register their own API client, so neoviu can't ship one. The setup is a one-time step:
+MyAnimeList requires each user to register their own API client, so nviu can't ship one. The setup is a one-time step:
 
 1. Open [myanimelist.net/apiconfig](https://myanimelist.net/apiconfig) and select **Create ID**.
 2. Set **App Type** to `other` and **App Redirect URL** to `http://localhost:8123/callback`. Fill in the remaining fields however you like.
-3. Run `viu tracker login myanimelist` and paste the client ID when neoviu asks for it. You can also set `tracking.mal_client_id` in the config file or the `VIU_MAL_CLIENT_ID` environment variable.
+3. Run `nviu tracker login myanimelist` and paste the client ID when nviu asks for it. You can also set `tracking.mal_client_id` in the config file or the `NVIU_MAL_CLIENT_ID` environment variable.
 
-neoviu then opens your browser and catches the login redirect on port 8123 automatically. If that port is busy, change `tracking.mal_redirect_port` and update the redirect URL on MyAnimeList to match. If the redirect page doesn't load, copy its full URL from the address bar and paste it into the terminal.
+nviu then opens your browser and catches the login redirect on port 8123 automatically. If that port is busy, change `tracking.mal_redirect_port` and update the redirect URL on MyAnimeList to match. If the redirect page doesn't load, copy its full URL from the address bar and paste it into the terminal.
 
-### Powerful Searching (`viu anilist search`)
+### Powerful Searching (`nviu anilist search`)
 
 Filter the entire AniList database with powerful command-line flags.
 
 ```bash
 # Search for anime from 2024, sorted by popularity, that is releasing and not on your list
-viu anilist search -y 2024 -s POPULARITY_DESC --status RELEASING --not-on-list
+nviu anilist search -y 2024 -s POPULARITY_DESC --status RELEASING --not-on-list
 
 # Find the most popular movies with the "Fantasy" genre
-viu anilist search -g Fantasy -f MOVIE -s POPULARITY_DESC
+nviu anilist search -g Fantasy -f MOVIE -s POPULARITY_DESC
 
 # Dump search results as JSON instead of launching the TUI
-viu anilist search -t "Demon Slayer" --dump-json
+nviu anilist search -t "Demon Slayer" --dump-json
 ```
 
-### Background Downloads (`viu queue` & `worker`)
+### Background Downloads (`nviu queue` & `worker`)
 
-neoviu includes a robust background downloading system.
+nviu includes a robust background downloading system.
 
 1. **Add episodes to the queue:**
 
     ```bash
     # Add episodes 1-12 of Jujutsu Kaisen to the download queue
-    viu queue add -t "Jujutsu Kaisen" -r "0:12"
+    nviu queue add -t "Jujutsu Kaisen" -r "0:12"
     ```
 
 2. **Start the worker process:**
 
     ````bash
     # Run the worker in the foreground (press Ctrl+C to stop)
-    viu worker
+    nviu worker
 
     # Or run it as a background process
-    viu worker &
+    nviu worker &
     ```The worker will now process the queue, download your episodes, and check for notifications.
     ````
 
@@ -479,20 +482,20 @@ These commands are designed for automation and quick, non-interactive tasks.
 
 ```bash
 # Download the latest 5 episodes of One Piece
-viu download -t "One Piece" -r "-5"
+nviu download -t "One Piece" -r "-5"
 
 # Download episodes 1 to 24, merge subtitles, and clean up original files
-viu download -t "Jujutsu Kaisen" -r "0:24" --merge --clean
+nviu download -t "Jujutsu Kaisen" -r "0:24" --merge --clean
 ```
 
 #### `search` (Binging) Examples
 
 ```bash
 # Start binging an anime from the first episode
-viu search -t "Attack on Titan" -r ":"
+nviu search -t "Attack on Titan" -r ":"
 
 # Watch the latest episode directly
-viu search -t "My Hero Academia" -r "-1"
+nviu search -t "My Hero Academia" -r "-1"
 ```
 
 ### Providers and Live-Site Restrictions
@@ -505,23 +508,23 @@ HiAnime is the default provider. Use `--provider` to choose another supported so
 | `anipub` | Uses AniPub's catalogue and MegaPlay streams. Supports sub/dub selection, subtitles, and both current and legacy episode links. |
 | `animeunity` | Supports search, episode listings, and MP4 streams from the Italian-language service. |
 
-AllAnime, AnimePahe, Nyaa, and Yugen have been removed rather than kept as non-working choices. When loading an older configuration, neoviu replaces a removed provider with HiAnime and retired server preferences with `TOP`, and displays a migration notice. It leaves the file unchanged until you run `viu config --update`; explicit command-line selections of removed providers are rejected.
+AllAnime, AnimePahe, Nyaa, and Yugen have been removed rather than kept as non-working choices. When loading an older configuration, nviu replaces a removed provider with HiAnime and retired server preferences with `TOP`, and displays a migration notice. It leaves the file unchanged until you run `nviu config --update`; explicit command-line selections of removed providers are rejected.
 
 The HiAnime implementation independently follows the current protocols documented by [ani-cli](https://github.com/pystardust/ani-cli). AniPub follows the catalogue and MegaPlay protocols used by [curd's AniPub provider](https://github.com/Wraient/curd/tree/main/internal/providers/anipub), sharing the existing MegaPlay extractor with HiAnime. Neither requires additional runtime dependencies.
 
 Choose a provider explicitly when another site is unavailable. Episode ranges use zero-based indices, so `0:1` selects only the first episode:
 
 ```bash
-viu --provider hianime search -t "Naruto" -r "0:1"
+nviu --provider hianime search -t "Naruto" -r "0:1"
 
 # Select the alternative HiAnime host explicitly.
-viu --provider hianime --server megaplay search -t "Naruto" -r "0:1"
+nviu --provider hianime --server megaplay search -t "Naruto" -r "0:1"
 
 # Use the additional AniPub catalogue, including dubbed episodes.
-viu --provider anipub --translation-type dub search -t "Death Note" -r "0:1"
+nviu --provider anipub --translation-type dub search -t "Death Note" -r "0:1"
 ```
 
-Quality preferences accept positive numeric values, including nonstandard upstream resolutions such as `--quality 800`. If the preferred quality is unavailable, neoviu selects the provider's top-ranked stream without changing your saved preference.
+Quality preferences accept positive numeric values, including nonstandard upstream resolutions such as `--quality 800`. If the preferred quality is unavailable, nviu selects the provider's top-ranked stream without changing your saved preference.
 
 Provider regression tests use synthetic responses and do not require network access:
 
@@ -537,9 +540,9 @@ VIU_LIVE_TESTS=1 uv run pytest -m integration tests/libs/provider/anime/test_liv
 
 Live tests fail when a site blocks requests or returns unusable streams. The default test run skips these checks, so offline test success must not be interpreted as proof that an upstream site is available.
 
-### Local Data Management (`viu registry`)
+### Local Data Management (`nviu registry`)
 
-neoviu maintains a local database of your anime for offline access and enhanced performance.
+nviu maintains a local database of your anime for offline access and enhanced performance.
 
 - `registry sync`: Synchronize your local data with your remote AniList account.
 - `registry stats`: Show detailed statistics about your viewing habits.
@@ -550,13 +553,13 @@ neoviu maintains a local database of your anime for offline access and enhanced 
 
 ## Configuration
 
-neoviu is highly customizable. A default configuration file with detailed comments is created on the first run.
+nviu is highly customizable. A default configuration file with detailed comments is created on the first run.
 
-- **Find your config file:** `viu config --path`
-- **Edit in your default editor:** `viu config`
-- **Use the interactive wizard:** `viu config --interactive`
+- **Find your config file:** `nviu config --path`
+- **Edit in your default editor:** `nviu config`
+- **Use the interactive wizard:** `nviu config --interactive`
 
-Most settings in the config file can be temporarily overridden with command-line flags (e.g., `viu --provider animeunity anilist`).
+Most settings in the config file can be temporarily overridden with command-line flags (e.g., `nviu --provider animeunity anilist`).
 
 <details>
   <summary><b>Default Configuration (`config.ini`) Explained</b></summary>
@@ -569,7 +572,7 @@ selector = fzf               ; The interactive UI tool (fzf, rofi, default).
 preview = full               ; Preview type in selectors (full, text, image, none).
 image_renderer = icat        ; Tool for terminal image previews (icat, chafa).
 icons = True                 ; Display emoji icons in the UI.
-interface = classic          ; What 'viu anilist' opens: classic menus or the grid.
+interface = classic          ; What 'nviu anilist' opens: classic menus or the grid.
 auto_select_anime_result = True ; Automatically select the best search match.
 ...
 
@@ -613,7 +616,7 @@ download_check_interval = 5      ; How often to process the download queue (minu
 
 ### MPV IPC Integration
 
-When `use_ipc = True` is set in your config, neoviu provides powerful in-player controls without needing to close MPV.
+When `use_ipc = True` is set in your config, nviu provides powerful in-player controls without needing to close MPV.
 
 **Key Bindings:**
 
@@ -632,16 +635,16 @@ When `use_ipc = True` is set in your config, neoviu provides powerful in-player 
 
 You can run the background worker as a systemd service for persistence.
 
-1. Create a service file at `~/.config/systemd/user/viu-worker.service`:
+1. Create a service file at `~/.config/systemd/user/nviu-worker.service`:
 
     ```ini
     [Unit]
-    Description=neoviu Background Worker
+    Description=nviu Background Worker
     After=network-online.target
 
     [Service]
     Type=simple
-    ExecStart=/path/to/your/viu worker --log
+    ExecStart=/path/to/your/nviu worker --log
     Restart=always
     RestartSec=30
 
@@ -649,13 +652,13 @@ You can run the background worker as a systemd service for persistence.
     WantedBy=default.target
     ```
 
-    *Replace `/path/to/your/viu` with the output of `which viu`.*
+    *Replace `/path/to/your/nviu` with the output of `which nviu`.*
 
 2. Enable and start the service:
 
     ```bash
     systemctl --user daemon-reload
-    systemctl --user enable --now viu-worker.service
+    systemctl --user enable --now nviu-worker.service
     ```
 
 ## Projects Using Viu
@@ -668,11 +671,11 @@ Contributions are welcome! Whether it's reporting a bug, proposing a feature, or
 
 ## Credits
 
-neoviu builds on the work of these projects:
+nviu builds on the work of these projects:
 
-- **[Viu](https://github.com/viu-media/viu)** by [Benexl](https://github.com/Benexl) and its contributors is the foundation of neoviu. The interactive TUI, AniList integration, local registry, downloader, and nearly everything outside the providers come from Viu, which is released under the Unlicense.
+- **[Viu](https://github.com/viu-media/viu)** by [Benexl](https://github.com/Benexl) and its contributors is the foundation of nviu. The interactive TUI, AniList integration, local registry, downloader, and nearly everything outside the providers come from Viu, which is released under the Unlicense.
 - **[ani-cli](https://github.com/pystardust/ani-cli)** by [pystardust](https://github.com/pystardust) and its contributors documents the current HiAnime, ZokoAnime, and MegaPlay flow that the `hianime` provider follows.
-- **[curd](https://github.com/Wraient/curd)** by [Wraient](https://github.com/Wraient) and its contributors documents the AniPub catalogue and MegaPlay stream decryption that the `anipub` provider follows. curd's tracker model, which offers AniList, MyAnimeList, both, or local only with a login prompt on first run, inspired `viu tracker`.
+- **[curd](https://github.com/Wraient/curd)** by [Wraient](https://github.com/Wraient) and its contributors documents the AniPub catalogue and MegaPlay stream decryption that the `anipub` provider follows. curd's tracker model, which offers AniList, MyAnimeList, both, or local only with a login prompt on first run, inspired `nviu tracker`.
 - **[Textual](https://github.com/Textualize/textual)** and **[textual-image](https://github.com/lnqs/textual-image)** power the grid interface.
 
-ani-cli and curd are licensed under GPL-3.0. neoviu reimplements the site protocols they document and doesn't include their code. Thank you to everyone who builds and maintains these projects.
+ani-cli and curd are licensed under GPL-3.0. nviu reimplements the site protocols they document and doesn't include their code. Thank you to everyone who builds and maintains these projects.

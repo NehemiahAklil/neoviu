@@ -444,5 +444,5 @@ class TrackersScreen(ViuScreen):
 
 def _client_id_placeholder(effective: str) -> str:
     if effective:
-        return "Client ID (currently set via VIU_MAL_CLIENT_ID)"
+        return "Client ID (currently set via NVIU_MAL_CLIENT_ID)"
     return "Client ID"

@@ -7,16 +7,16 @@ import click
 \b
 \b\bExamples:
     # try to detect your shell and print completions
-    viu completions
+    nviu completions
 \b
     # print fish completions
-    viu completions --fish
+    nviu completions --fish
 \b
     # print bash completions
-    viu completions --bash
+    nviu completions --bash
 \b
     # print zsh completions
-    viu completions --zsh
+    nviu completions --zsh
 """,
 )
 @click.option("--fish", is_flag=True, help="print fish completions")
@@ -40,8 +40,8 @@ def completions(fish, zsh, bash):
     if fish or (current_shell == "fish" and not zsh and not bash):
         print(
             """
-function _viu_completion;
-    set -l response (env _VIU_COMPLETE=fish_complete COMP_WORDS=(commandline -cp) COMP_CWORD=(commandline -t) viu);
+function _nviu_completion;
+    set -l response (env _NVIU_COMPLETE=fish_complete COMP_WORDS=(commandline -cp) COMP_CWORD=(commandline -t) nviu);
 
     for completion in $response;
         set -l metadata (string split "," $completion);
@@ -56,21 +56,21 @@ function _viu_completion;
     end;
 end;
 
-complete --no-files --command viu --arguments "(_viu_completion)";
+complete --no-files --command nviu --arguments "(_nviu_completion)";
         """
         )
     elif zsh or (current_shell == "zsh" and not bash):
         print(
             """
-#compdef viu
+#compdef nviu
 
-_viu_completion() {
+_nviu_completion() {
     local -a completions
     local -a completions_with_descriptions
     local -a response
-    (( ! $+commands[viu] )) && return 1
+    (( ! $+commands[nviu] )) && return 1
 
-    response=("${(@f)$(env COMP_WORDS="${words[*]}" COMP_CWORD=$((CURRENT-1)) _VIU_COMPLETE=zsh_complete viu)}")
+    response=("${(@f)$(env COMP_WORDS="${words[*]}" COMP_CWORD=$((CURRENT-1)) _NVIU_COMPLETE=zsh_complete nviu)}")
 
     for type key descr in ${response}; do
         if [[ "$type" == "plain" ]]; then
@@ -97,21 +97,21 @@ _viu_completion() {
 
 if [[ $zsh_eval_context[-1] == loadautofunc ]]; then
     # autoload from fpath, call function directly
-    _viu_completion "$@"
+    _nviu_completion "$@"
 else
     # eval/source/. command, register function for later
-    compdef _viu_completion viu
+    compdef _nviu_completion nviu
 fi
         """
         )
     elif bash or current_shell == "bash":
         print(
             """
-_viu_completion() {
+_nviu_completion() {
     local IFS=$'\n'
     local response
 
-    response=$(env COMP_WORDS="${COMP_WORDS[*]}" COMP_CWORD=$COMP_CWORD _VIU_COMPLETE=bash_complete $1)
+    response=$(env COMP_WORDS="${COMP_WORDS[*]}" COMP_CWORD=$COMP_CWORD _NVIU_COMPLETE=bash_complete $1)
 
     for completion in $response; do
         IFS=',' read type value <<< "$completion"
@@ -130,11 +130,11 @@ _viu_completion() {
     return 0
 }
 
-_viu_completion_setup() {
-    complete -o nosort -F _viu_completion viu
+_nviu_completion_setup() {
+    complete -o nosort -F _nviu_completion nviu
 }
 
-_viu_completion_setup;
+_nviu_completion_setup;
         """
         )
     else:

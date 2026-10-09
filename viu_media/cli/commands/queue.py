@@ -15,7 +15,7 @@ from viu_media.libs.media_api.types import (
 
 
 @click.command(help="Queue episodes for the background worker to download.")
-# Search/Filter options (mirrors 'viu anilist download')
+# Search/Filter options (mirrors 'nviu anilist download')
 @click.option("--title", "-t")
 @click.option("--page", "-p", type=click.IntRange(min=1), default=1)
 @click.option("--per-page", type=click.IntRange(min=1, max=50))

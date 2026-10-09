@@ -16,10 +16,34 @@ from ...core.constants import (
     CLI_NAME_LOWER,
     GIT_REPO,
     PROJECT_NAME,
+    REPO_GIT_URL,
+    REPO_NAME,
     __version__,
 )
 
-API_URL = f"https://api.{GIT_REPO}/repos/{AUTHOR}/{CLI_NAME_LOWER}/releases/latest"
+API_URL = f"https://api.{GIT_REPO}/repos/{AUTHOR}/{REPO_NAME}/releases/latest"
+
+_VERSION_PATTERN = re.compile(
+    r"v?(\d+)(?:\.(\d+))?(?:\.(\d+))?(?:[-.]?(alpha|beta|rc|a|b)[-.]?(\d*))?",
+    re.IGNORECASE,
+)
+_PRE_RELEASE_RANK = {"a": 0, "alpha": 0, "b": 1, "beta": 1, "rc": 2}
+
+
+def parse_version(version: str) -> tuple[int, ...]:
+    """Turn a version such as '0.0.8a1' or 'v1.2.0' into a sortable tuple.
+
+    Pre-releases sort before the final release: 0.0.8a1 < 0.0.8rc1 < 0.0.8.
+    Unrecognised strings sort lowest.
+    """
+    match = _VERSION_PATTERN.match(version.strip())
+    if not match:
+        return (-1,)
+    major, minor, patch, pre, pre_number = match.groups()
+    release = (int(major), int(minor or 0), int(patch or 0))
+    if pre is None:
+        return (*release, 3, 0)
+    return (*release, _PRE_RELEASE_RANK[pre.lower()], int(pre_number or 0))
 
 
 def print_release_json(release_json):
@@ -58,24 +82,13 @@ def check_for_updates():
 
     if response.status_code == 200:
         release_json = response.json()
-        remote_tag = list(
-            map(int, release_json["tag_name"].replace("v", "").split("."))
+        is_latest = parse_version(release_json.get("tag_name", "")) <= parse_version(
+            __version__
         )
-        local_tag = list(map(int, __version__.replace("v", "").split(".")))
-        if (
-            (remote_tag[0] > local_tag[0])
-            or (remote_tag[1] > local_tag[1] and remote_tag[0] == local_tag[0])
-            or (
-                remote_tag[2] > local_tag[2]
-                and remote_tag[0] == local_tag[0]
-                and remote_tag[1] == local_tag[1]
-            )
-        ):
-            is_latest = False
-        else:
-            is_latest = True
-
         return (is_latest, release_json)
+    elif response.status_code == 404:
+        # No releases have been published yet.
+        return (True, {})
     else:
         print("Failed to check for updates")
         print(response.text)
@@ -125,7 +138,7 @@ def update_app(force=False):
         process = subprocess.run(
             [NIX, "profile", "upgrade", CLI_NAME_LOWER], check=False
         )
-    elif is_git_repo(AUTHOR, CLI_NAME_LOWER):
+    elif is_git_repo(AUTHOR, REPO_NAME):
         GIT_EXECUTABLE = shutil.which("git")
         args = [
             GIT_EXECUTABLE,
@@ -155,7 +168,7 @@ def update_app(force=False):
             "-m",
             "pip",
             "install",
-            PROJECT_NAME,
+            f"{PROJECT_NAME} @ git+{REPO_GIT_URL}",
             "-U",
             "--no-warn-script-location",
         ]
@@ -167,7 +180,7 @@ def update_app(force=False):
         process = subprocess.run(args, check=False)
     if process.returncode == 0:
         print(
-            "[green]Its recommended to run the following after updating:\n\tviu config --update (to get the latest config docs)\n\tviu cache --clean (to get rid of any potential issues)[/]",
+            "[green]Its recommended to run the following after updating:\n\tnviu config --update (to get the latest config docs)\n\tnviu cache --clean (to get rid of any potential issues)[/]",
             file=sys.stderr,
         )
         return True, release_json

@@ -1,4 +1,4 @@
-"""The 'viu tracker' and 'viu tui' commands, with services mocked out."""
+"""The 'nviu tracker' and 'nviu tui' commands, with services mocked out."""
 
 from unittest.mock import MagicMock, patch
 

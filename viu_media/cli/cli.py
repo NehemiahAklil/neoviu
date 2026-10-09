@@ -1,5 +1,4 @@
 import logging
-import shutil
 import sys
 from typing import TYPE_CHECKING
 
@@ -7,7 +6,7 @@ import click
 from click.core import ParameterSource
 
 from ..core.config import AppConfig
-from ..core.constants import CLI_NAME, USER_CONFIG, __version__
+from ..core.constants import CLI_NAME, CLI_NAME_LOWER, USER_CONFIG, __version__
 from .config import ConfigLoader
 from .options import options_from_model
 from .utils.exception import setup_exceptions_handler
@@ -73,7 +72,7 @@ commands = {
 @click.pass_context
 def cli(ctx: click.Context, **options: "Unpack[Options]"):
     """
-    The main entry point for the Viu CLI.
+    The main entry point for the nviu CLI.
     """
     setup_logging(options["log"])
     setup_exceptions_handler(
@@ -157,22 +156,9 @@ You can disable this message by turning off the welcome_screen option in the con
         should_print_release_notes = False
         if last_release_file.exists():
             last_release = last_release_file.read_text(encoding="utf-8")
-            current_version = list(map(int, __version__.replace("v", "").split(".")))
-            last_saved_version = list(
-                map(int, last_release.replace("v", "").split("."))
-            )
-            if (
-                (current_version[0] > last_saved_version[0])
-                or (
-                    current_version[1] > last_saved_version[1]
-                    and current_version[0] == last_saved_version[0]
-                )
-                or (
-                    current_version[2] > last_saved_version[2]
-                    and current_version[0] == last_saved_version[0]
-                    and current_version[1] == last_saved_version[1]
-                )
-            ):
+            from .utils.update import parse_version
+
+            if parse_version(__version__) > parse_version(last_release):
                 should_print_release_notes = True
 
         else:
@@ -191,8 +177,7 @@ You can disable this message by turning off the welcome_screen option in the con
             ):
                 import subprocess
 
-                _cli_cmd_name = "viu" if not shutil.which("viu-media") else "viu-media"
-                cmd = [_cli_cmd_name, "config", "--update"]
+                cmd = [CLI_NAME_LOWER, "config", "--update"]
                 print(f"running '{' '.join(cmd)}'...")
                 subprocess.run(cmd)
 

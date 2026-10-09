@@ -104,7 +104,7 @@ def download_image(url: str, output_path: Path) -> bool:
         # Try using urllib (stdlib)
         from urllib import request
 
-        req = request.Request(url, headers={"User-Agent": "viu/1.0"})
+        req = request.Request(url, headers={"User-Agent": "nviu/1.0"})
         with request.urlopen(req, timeout=5) as response:
             data = response.read()
             output_path.write_bytes(data)

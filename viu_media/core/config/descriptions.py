@@ -24,7 +24,7 @@ GENERAL_IMAGE_RENDERER = (
     "The command-line tool to use for rendering images in the terminal."
 )
 GENERAL_MANGA_VIEWER = "The external application to use for viewing manga pages."
-GENERAL_CHECK_FOR_UPDATES = "Automatically check for new versions of Viu on startup."
+GENERAL_CHECK_FOR_UPDATES = "Automatically check for new versions of nviu on startup."
 GENERAL_SHOW_NEW_RELEASE = (
     "Whether to show release notes after every  update when running the new version"
 )
@@ -39,8 +39,8 @@ GENERAL_NORMALIZE_TITLES = (
 GENERAL_DISCORD = "Enable Discord Rich Presence to show your current activity."
 GENERAL_RECENT = "Number of recently watched anime to keep in history."
 GENERAL_INTERFACE = (
-    "The interface 'viu anilist' opens: 'classic' selector menus or the 'grid' "
-    "TUI (requires the viu-media[tui] extra)."
+    "The interface 'nviu anilist' opens: 'classic' selector menus or the 'grid' "
+    "TUI (requires the nviu[tui] extra)."
 )
 
 # StreamConfig
@@ -114,12 +114,12 @@ TRACKING_REMOTE = (
 TRACKING_PROMPT_LOGIN = "Ask you to log in when a configured tracker is not connected."
 TRACKING_MAL_CLIENT_ID = (
     "Client ID of your MyAnimeList API app (create one at "
-    "https://myanimelist.net/apiconfig). Falls back to the VIU_MAL_CLIENT_ID "
+    "https://myanimelist.net/apiconfig). Falls back to the NVIU_MAL_CLIENT_ID "
     "environment variable."
 )
 TRACKING_MAL_CLIENT_SECRET = (
     "Client secret of your MyAnimeList API app, only needed for 'web' apps. "
-    "Falls back to the VIU_MAL_CLIENT_SECRET environment variable."
+    "Falls back to the NVIU_MAL_CLIENT_SECRET environment variable."
 )
 TRACKING_MAL_REDIRECT_PORT = (
     "Local port for the MyAnimeList login callback. Your MAL app's redirect URL "

@@ -33,7 +33,9 @@ def choose_remote(
     feedback: "FeedbackService",
 ) -> bool:
     """Asks where progress should be tracked and saves the answer."""
-    choice = selector.choose("Where should viu track your anime?", list(REMOTE_CHOICES))
+    choice = selector.choose(
+        "Where should nviu track your anime?", list(REMOTE_CHOICES)
+    )
     if not choice:
         return False
     remote = REMOTE_CHOICES[choice]
@@ -58,9 +60,9 @@ def login_anilist(
     if not token:
         url = tracking.anilist_login_url
         if webbrowser.open(url, new=2):
-            feedback.info("Your browser has been opened to authorize viu on AniList.")
+            feedback.info("Your browser has been opened to authorize nviu on AniList.")
         else:
-            feedback.warning(f"Open this page to authorize viu on AniList: {url}")
+            feedback.warning(f"Open this page to authorize nviu on AniList: {url}")
         feedback.info("Copy the access token AniList shows you and paste it below.")
         token = selector.ask("AniList access token")
     if not token:
@@ -120,7 +122,7 @@ def login_myanimelist(
     if not callback:
         if webbrowser.open(request.url, new=2):
             feedback.info(
-                "Your browser has been opened to authorize viu on MyAnimeList."
+                "Your browser has been opened to authorize nviu on MyAnimeList."
             )
         else:
             feedback.warning(f"Open this page to authorize viu: {request.url}")
@@ -188,7 +190,7 @@ def ensure_tracking(
     if not tracking.config.tracking.prompt_login:
         if not tracking.can_track:
             feedback.warning(
-                "No tracker is logged in.", "Run 'viu tracker login' to connect one."
+                "No tracker is logged in.", "Run 'nviu tracker login' to connect one."
             )
         return tracking.can_track
 

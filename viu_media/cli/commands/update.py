@@ -1,4 +1,4 @@
-"""Update command for Viu CLI."""
+"""Update command for the nviu CLI."""
 
 from typing import TYPE_CHECKING
 
@@ -12,22 +12,22 @@ if TYPE_CHECKING:
 
 
 @click.command(
-    help="Update Viu to the latest version",
-    short_help="Update Viu",
+    help="Update nviu to the latest version",
+    short_help="Update nviu",
     epilog="""
 \b
 \b\bExamples:
   # Check for updates and update if available
-  viu update
+  nviu update
 \b
   # Force update even if already up to date
-  viu update --force
+  nviu update --force
 \b
   # Only check for updates without updating
-  viu update --check-only
+  nviu update --check-only
 \b
   # Show release notes for the latest version
-  viu update --release-notes
+  nviu update --release-notes
 """,
 )
 @click.option(
@@ -58,7 +58,7 @@ def update(
     release_notes: bool,
 ) -> None:
     """
-    Update Viu to the latest version.
+    Update nviu to the latest version.
 
     This command checks for available updates and optionally updates
     the application to the latest version from the configured sources
@@ -94,12 +94,12 @@ def update(
             )
 
         if is_latest:
-            print("[green]Viu is up to date![/]")
+            print("[green]nviu is up to date![/]")
             print(f"[dim]Current version: {release_json.get('tag_name', 'unknown')}[/]")
         else:
             latest_version = release_json.get("tag_name", "unknown")
             print(f"[yellow]Update available: {latest_version}[/]")
-            print("[dim]Run 'viu update' to update[/]")
+            print("[dim]Run 'nviu update' to update[/]")
     else:
         print("[cyan]Checking for updates and updating if necessary...[/]")
         success, release_json = update_app(force=force)

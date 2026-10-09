@@ -25,7 +25,7 @@ def test_old_saved_provider_is_migrated_with_a_visible_notice(
     assert path.read_text() == original
     notice = capsys.readouterr().err
     assert provider in notice and "hianime" in notice
-    assert "viu config --update" in notice
+    assert "nviu config --update" in notice
 
     path.write_text(generate_config_toml_from_app_model(config))
     assert ConfigLoader(path).load().general.provider is ProviderName.HIANIME

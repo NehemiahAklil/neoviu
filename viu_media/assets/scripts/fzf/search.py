@@ -75,7 +75,7 @@ def make_graphql_request(
     """
     payload = {"query": query, "variables": variables}
 
-    headers = {"Content-Type": "application/json", "User-Agent": "viu/1.0"}
+    headers = {"Content-Type": "application/json", "User-Agent": "nviu/1.0"}
 
     if auth_token:
         headers["Authorization"] = auth_token

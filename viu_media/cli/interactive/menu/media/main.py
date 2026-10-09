@@ -182,7 +182,7 @@ def _create_user_list_action(
         if not ensure_tracking(ctx.tracking, ctx.selector, feedback):
             feedback.error(
                 "You haven't logged in to a tracker",
-                "Run 'viu tracker login' to connect AniList or MyAnimeList.",
+                "Run 'nviu tracker login' to connect AniList or MyAnimeList.",
             )
             return InternalDirective.MAIN
 

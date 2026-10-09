@@ -9,7 +9,7 @@ def worker(config: AppConfig):
     Starts the long-running background worker process.
     This process will periodically check for AniList notifications and
     process any queued downloads. It's recommended to run this in the
-    background (e.g., 'viu worker &') or as a system service.
+    background (e.g., 'nviu worker &') or as a system service.
     """
     from viu_media.cli.service.auth import AuthService
     from viu_media.cli.service.download.service import DownloadService

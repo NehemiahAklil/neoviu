@@ -54,23 +54,23 @@ def _print_status(tracking: "TrackingService", feedback: "FeedbackService") -> N
     if source:
         console.print(f"Your lists come from {TRACKER_LABELS[source]}.")
     elif tracking.enabled_trackers:
-        console.print("Run [bold]viu tracker login[/] to connect your account.")
+        console.print("Run [bold]nviu tracker login[/] to connect your account.")
     else:
         console.print(
             "Progress is only tracked locally. "
-            "Run [bold]viu tracker login[/] to sync it with AniList or MyAnimeList."
+            "Run [bold]nviu tracker login[/] to sync it with AniList or MyAnimeList."
         )
     if tracking.is_enabled("myanimelist") and not tracking.mal_client_id:
         console.print(
             "[yellow]MyAnimeList needs your own client ID; "
-            "'viu tracker login myanimelist' walks you through it.[/]"
+            "'nviu tracker login myanimelist' walks you through it.[/]"
         )
 
 
 @click.group(
     invoke_without_command=True,
     help=(
-        "Connect AniList and/or MyAnimeList so your lists show up in viu and "
+        "Connect AniList and/or MyAnimeList so your lists show up in nviu and "
         "your watch progress is synced to the sites. Shows the current status "
         "when run without a subcommand."
     ),
@@ -150,7 +150,7 @@ def login(
                 tracking.set_remote(remote)
                 feedback.success(f"Tracking mode set to '{remote}'.")
             else:
-                feedback.info(f"Run 'viu tracker mode {target}' to sync with {label}.")
+                feedback.info(f"Run 'nviu tracker mode {target}' to sync with {label}.")
     if failed:
         ctx.exit(1)
 
@@ -187,4 +187,4 @@ def mode(config: "AppConfig", mode: Optional[str]):
     feedback.success(f"Tracking mode set to '{mode}'.")
     if missing := tracking.missing_logins():
         labels = " and ".join(TRACKER_LABELS[t] for t in missing)
-        feedback.info(f"Run 'viu tracker login' to connect {labels}.")
+        feedback.info(f"Run 'nviu tracker login' to connect {labels}.")

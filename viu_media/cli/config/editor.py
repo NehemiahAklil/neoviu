@@ -31,7 +31,7 @@ class InteractiveConfigEditor:
 
     def run(self) -> AppConfig:
         """Starts the interactive configuration wizard."""
-        print("[bold cyan]Welcome to the Viu Interactive Configurator![/bold cyan]")
+        print("[bold cyan]Welcome to the nviu Interactive Configurator![/bold cyan]")
         print("Let's set up your experience. Press Ctrl+C at any time to exit.")
         print("Current values will be shown as defaults.")
 

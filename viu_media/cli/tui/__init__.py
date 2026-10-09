@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 INSTALL_HINT = (
     "The grid interface needs the optional 'tui' extra. Install it with:\n"
-    '  uv tool install "viu-media[tui] @ git+https://github.com/NehemiahAklil/neoviu.git"\n'
+    '  uv tool install "nviu[tui] @ git+https://github.com/NehemiahAklil/neoviu.git"\n'
     "or, from a checkout:  uv sync --extra tui"
 )
 

@@ -1,13 +1,13 @@
 # values in {NAME} syntax are provided by python using .replace()
 # 
 [Unit]
-Description=Viu Background Worker
+Description=nviu Background Worker
 After=network-online.target
 
 [Service]
 Type=simple
-# Ensure you have the full path to your viu executable
-# Use `which viu` to find it
+# Ensure you have the full path to your nviu executable
+# Use `which nviu` to find it
 ExecStart={EXECUTABLE} worker --log
 Restart=always
 RestartSec=30

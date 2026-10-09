@@ -78,7 +78,7 @@ def sync(
                 "Authentication Required",
                 f"You must be logged in to {api} to sync your media list.",
             )
-            feedback.info("Run this command to authenticate:", f"viu {api} auth")
+            feedback.info("Run this command to authenticate:", f"nviu {api} auth")
             raise click.Abort()
 
     # Determine which statuses to sync

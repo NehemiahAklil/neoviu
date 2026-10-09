@@ -429,7 +429,7 @@ class MpvIPCPlayer(BaseIPCPlayer):
         for key, (command, description) in key_bindings.items():
             self._bind_key(key, command, description)
 
-        self._show_text("Viu IPC: Shift+N=Next, Shift+P=Prev, Shift+R=Reload", 3000)
+        self._show_text("nviu IPC: Shift+N=Next, Shift+P=Prev, Shift+R=Reload", 3000)
 
     def _setup_message_handlers(self):
         self.message_handlers.update(

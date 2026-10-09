@@ -1,5 +1,5 @@
 version = 1
-revision = 5
+revision = 3
 requires-python = ">=3.11"
 resolution-markers = [
     "python_full_version >= '3.12'",
@@ -413,6 +413,115 @@ wheels = [
 ]
 
 [[package]]
+name = "nviu"
+version = "0.0.8a1"
+source = { editable = "." }
+dependencies = [
+    { name = "click" },
+    { name = "httpx" },
+    { name = "inquirerpy" },
+    { name = "pycryptodomex" },
+    { name = "pydantic" },
+    { name = "rich" },
+]
+
+[package.optional-dependencies]
+discord = [
+    { name = "pypresence" },
+]
+download = [
+    { name = "pycryptodomex" },
+    { name = "yt-dlp" },
+]
+lxml = [
+    { name = "lxml" },
+]
+mpv = [
+    { name = "mpv" },
+]
+notifications = [
+    { name = "dbus-python", marker = "sys_platform == 'linux'" },
+    { name = "plyer" },
+    { name = "pyobjc", marker = "sys_platform == 'darwin'" },
+    { name = "pypiwin32", marker = "sys_platform == 'win32'" },
+]
+standard = [
+    { name = "dbus-python", marker = "sys_platform == 'linux'" },
+    { name = "lxml" },
+    { name = "plyer" },
+    { name = "pycryptodomex" },
+    { name = "pyobjc", marker = "sys_platform == 'darwin'" },
+    { name = "pypiwin32", marker = "sys_platform == 'win32'" },
+    { name = "thefuzz" },
+    { name = "yt-dlp" },
+]
+torrent = [
+    { name = "libtorrent" },
+]
+torrents = [
+    { name = "libtorrent" },
+]
+tui = [
+    { name = "textual" },
+    { name = "textual-image", version = "0.12.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
+    { name = "textual-image", version = "0.14.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "pre-commit" },
+    { name = "pyinstaller" },
+    { name = "pyright" },
+    { name = "pytest" },
+    { name = "pytest-httpx" },
+    { name = "ruff" },
+    { name = "types-lxml" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "click", specifier = ">=8.1.7" },
+    { name = "dbus-python", marker = "sys_platform == 'linux' and extra == 'notifications'", specifier = ">=1.4.0" },
+    { name = "dbus-python", marker = "sys_platform == 'linux' and extra == 'standard'" },
+    { name = "httpx", specifier = ">=0.28.1" },
+    { name = "inquirerpy", specifier = ">=0.3.4" },
+    { name = "libtorrent", marker = "extra == 'torrent'", specifier = ">=2.0.11" },
+    { name = "libtorrent", marker = "extra == 'torrents'", specifier = ">=2.0.11" },
+    { name = "lxml", marker = "extra == 'lxml'", specifier = ">=6.0.0" },
+    { name = "lxml", marker = "extra == 'standard'", specifier = ">=6.0.0" },
+    { name = "mpv", marker = "extra == 'mpv'", specifier = ">=1.0.7" },
+    { name = "plyer", marker = "extra == 'notifications'", specifier = ">=2.1.0" },
+    { name = "plyer", marker = "extra == 'standard'", specifier = ">=2.1.0" },
+    { name = "pycryptodomex", specifier = ">=3.23.0" },
+    { name = "pycryptodomex", marker = "extra == 'download'", specifier = ">=3.23.0" },
+    { name = "pycryptodomex", marker = "extra == 'standard'", specifier = ">=3.23.0" },
+    { name = "pydantic", specifier = ">=2.11.7" },
+    { name = "pyobjc", marker = "sys_platform == 'darwin' and extra == 'notifications'" },
+    { name = "pyobjc", marker = "sys_platform == 'darwin' and extra == 'standard'" },
+    { name = "pypiwin32", marker = "sys_platform == 'win32' and extra == 'notifications'" },
+    { name = "pypiwin32", marker = "sys_platform == 'win32' and extra == 'standard'" },
+    { name = "pypresence", marker = "extra == 'discord'", specifier = ">=4.3.0" },
+    { name = "rich", specifier = ">=13.9.2" },
+    { name = "textual", marker = "extra == 'tui'", specifier = ">=8.0.0" },
+    { name = "textual-image", marker = "extra == 'tui'", specifier = ">=0.12.0" },
+    { name = "thefuzz", marker = "extra == 'standard'", specifier = ">=0.22.1" },
+    { name = "yt-dlp", marker = "extra == 'download'", specifier = ">=2025.7.21" },
+    { name = "yt-dlp", marker = "extra == 'standard'", specifier = ">=2025.7.21" },
+]
+provides-extras = ["standard", "notifications", "mpv", "torrent", "lxml", "discord", "download", "torrents", "tui"]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "pre-commit", specifier = ">=4.0.1" },
+    { name = "pyinstaller", specifier = ">=6.11.1" },
+    { name = "pyright", specifier = ">=1.1.384" },
+    { name = "pytest", specifier = ">=8.3.3" },
+    { name = "pytest-httpx", specifier = ">=0.35.0" },
+    { name = "ruff", specifier = ">=0.6.9" },
+    { name = "types-lxml", specifier = ">=2026.2.16" },
+]
+
+[[package]]
 name = "packaging"
 version = "26.2"
 source = { registry = "https://pypi.org/simple" }
@@ -782,166 +891,165 @@ version = "12.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pyobjc-core" },
-    { name = "pyobjc-framework-accessibility", marker = "platform_release >= '20'" },
-    { name = "pyobjc-framework-accounts", marker = "platform_release >= '12'" },
+    { name = "pyobjc-framework-accessibility", marker = "(platform_release >= '20.0' and sys_platform != 'darwin') or (platform_release >= '20' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-accounts", marker = "(platform_release >= '12.0' and sys_platform != 'darwin') or (platform_release >= '12' and sys_platform == 'darwin')" },
     { name = "pyobjc-framework-addressbook" },
-    { name = "pyobjc-framework-adservices", marker = "platform_release >= '20'" },
-    { name = "pyobjc-framework-adsupport", marker = "platform_release >= '18'" },
+    { name = "pyobjc-framework-adservices", marker = "(platform_release >= '20.0' and sys_platform != 'darwin') or (platform_release >= '20' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-adsupport", marker = "(platform_release >= '18.0' and sys_platform != 'darwin') or (platform_release >= '18' and sys_platform == 'darwin')" },
     { name = "pyobjc-framework-applescriptkit" },
-    { name = "pyobjc-framework-applescriptobjc", marker = "platform_release >= '10'" },
+    { name = "pyobjc-framework-applescriptobjc", marker = "(platform_release >= '10.0' and sys_platform != 'darwin') or (platform_release >= '10' and sys_platform == 'darwin')" },
     { name = "pyobjc-framework-applicationservices" },
-    { name = "pyobjc-framework-apptrackingtransparency", marker = "platform_release >= '20'" },
-    { name = "pyobjc-framework-arkit", marker = "platform_release >= '25'" },
-    { name = "pyobjc-framework-audiovideobridging", marker = "platform_release >= '12'" },
-    { name = "pyobjc-framework-authenticationservices", marker = "platform_release >= '19'" },
-    { name = "pyobjc-framework-automaticassessmentconfiguration", marker = "platform_release >= '19'" },
+    { name = "pyobjc-framework-apptrackingtransparency", marker = "(platform_release >= '20.0' and sys_platform != 'darwin') or (platform_release >= '20' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-arkit", marker = "(platform_release >= '25.0' and sys_platform != 'darwin') or (platform_release >= '25' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-audiovideobridging", marker = "(platform_release >= '12.0' and sys_platform != 'darwin') or (platform_release >= '12' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-authenticationservices", marker = "(platform_release >= '19.0' and sys_platform != 'darwin') or (platform_release >= '19' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-automaticassessmentconfiguration", marker = "(platform_release >= '19.0' and sys_platform != 'darwin') or (platform_release >= '19' and sys_platform == 'darwin')" },
     { name = "pyobjc-framework-automator" },
-    { name = "pyobjc-framework-avfoundation", marker = "platform_release >= '11'" },
-    { name = "pyobjc-framework-avkit", marker = "platform_release >= '13'" },
-    { name = "pyobjc-framework-avrouting", marker = "platform_release >= '22'" },
-    { name = "pyobjc-framework-backgroundassets", marker = "platform_release >= '22'" },
+    { name = "pyobjc-framework-avfoundation", marker = "(platform_release >= '11.0' and sys_platform != 'darwin') or (platform_release >= '11' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-avkit", marker = "(platform_release >= '13.0' and sys_platform != 'darwin') or (platform_release >= '13' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-avrouting", marker = "(platform_release >= '22.0' and sys_platform != 'darwin') or (platform_release >= '22' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-backgroundassets", marker = "(platform_release >= '22.0' and sys_platform != 'darwin') or (platform_release >= '22' and sys_platform == 'darwin')" },
     { name = "pyobjc-framework-browserenginekit", marker = "platform_release >= '23.4'" },
-    { name = "pyobjc-framework-businesschat", marker = "platform_release >= '18'" },
-    { name = "pyobjc-framework-calendarstore", marker = "platform_release >= '9'" },
-    { name = "pyobjc-framework-callkit", marker = "platform_release >= '20'" },
+    { name = "pyobjc-framework-businesschat", marker = "(platform_release >= '18.0' and sys_platform != 'darwin') or (platform_release >= '18' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-calendarstore", marker = "(platform_release >= '9.0' and sys_platform != 'darwin') or (platform_release >= '9' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-callkit", marker = "(platform_release >= '20.0' and sys_platform != 'darwin') or (platform_release >= '20' and sys_platform == 'darwin')" },
     { name = "pyobjc-framework-carbon" },
     { name = "pyobjc-framework-cfnetwork" },
-    { name = "pyobjc-framework-cinematic", marker = "platform_release >= '23'" },
-    { name = "pyobjc-framework-classkit", marker = "platform_release >= '20'" },
-    { name = "pyobjc-framework-cloudkit", marker = "platform_release >= '14'" },
+    { name = "pyobjc-framework-cinematic", marker = "(platform_release >= '23.0' and sys_platform != 'darwin') or (platform_release >= '23' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-classkit", marker = "(platform_release >= '20.0' and sys_platform != 'darwin') or (platform_release >= '20' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-cloudkit", marker = "(platform_release >= '14.0' and sys_platform != 'darwin') or (platform_release >= '14' and sys_platform == 'darwin')" },
     { name = "pyobjc-framework-cocoa" },
-    { name = "pyobjc-framework-collaboration", marker = "platform_release >= '9'" },
-    { name = "pyobjc-framework-colorsync", marker = "platform_release >= '17'" },
-    { name = "pyobjc-framework-compositorservices", marker = "platform_release >= '25'" },
-    { name = "pyobjc-framework-contacts", marker = "platform_release >= '15'" },
-    { name = "pyobjc-framework-contactsui", marker = "platform_release >= '15'" },
+    { name = "pyobjc-framework-collaboration", marker = "(platform_release >= '9.0' and sys_platform != 'darwin') or (platform_release >= '9' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-colorsync", marker = "(platform_release >= '17.0' and sys_platform != 'darwin') or (platform_release >= '17' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-compositorservices", marker = "(platform_release >= '25.0' and sys_platform != 'darwin') or (platform_release >= '25' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-contacts", marker = "(platform_release >= '15.0' and sys_platform != 'darwin') or (platform_release >= '15' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-contactsui", marker = "(platform_release >= '15.0' and sys_platform != 'darwin') or (platform_release >= '15' and sys_platform == 'darwin')" },
     { name = "pyobjc-framework-coreaudio" },
     { name = "pyobjc-framework-coreaudiokit" },
-    { name = "pyobjc-framework-corebluetooth", marker = "platform_release >= '14'" },
+    { name = "pyobjc-framework-corebluetooth", marker = "(platform_release >= '14.0' and sys_platform != 'darwin') or (platform_release >= '14' and sys_platform == 'darwin')" },
     { name = "pyobjc-framework-coredata" },
-    { name = "pyobjc-framework-corehaptics", marker = "platform_release >= '19'" },
-    { name = "pyobjc-framework-corelocation", marker = "platform_release >= '10'" },
-    { name = "pyobjc-framework-coremedia", marker = "platform_release >= '11'" },
-    { name = "pyobjc-framework-coremediaio", marker = "platform_release >= '11'" },
+    { name = "pyobjc-framework-corehaptics", marker = "(platform_release >= '19.0' and sys_platform != 'darwin') or (platform_release >= '19' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-corelocation", marker = "(platform_release >= '10.0' and sys_platform != 'darwin') or (platform_release >= '10' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-coremedia", marker = "(platform_release >= '11.0' and sys_platform != 'darwin') or (platform_release >= '11' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-coremediaio", marker = "(platform_release >= '11.0' and sys_platform != 'darwin') or (platform_release >= '11' and sys_platform == 'darwin')" },
     { name = "pyobjc-framework-coremidi" },
-    { name = "pyobjc-framework-coreml", marker = "platform_release >= '17'" },
-    { name = "pyobjc-framework-coremotion", marker = "platform_release >= '19'" },
+    { name = "pyobjc-framework-coreml", marker = "(platform_release >= '17.0' and sys_platform != 'darwin') or (platform_release >= '17' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-coremotion", marker = "(platform_release >= '19.0' and sys_platform != 'darwin') or (platform_release >= '19' and sys_platform == 'darwin')" },
     { name = "pyobjc-framework-coreservices" },
-    { name = "pyobjc-framework-corespotlight", marker = "platform_release >= '17'" },
+    { name = "pyobjc-framework-corespotlight", marker = "(platform_release >= '17.0' and sys_platform != 'darwin') or (platform_release >= '17' and sys_platform == 'darwin')" },
     { name = "pyobjc-framework-coretext" },
-    { name = "pyobjc-framework-corewlan", marker = "platform_release >= '10'" },
-    { name = "pyobjc-framework-cryptotokenkit", marker = "platform_release >= '14'" },
-    { name = "pyobjc-framework-datadetection", marker = "platform_release >= '21'" },
-    { name = "pyobjc-framework-devicecheck", marker = "platform_release >= '19'" },
-    { name = "pyobjc-framework-devicediscoveryextension", marker = "platform_release >= '24'" },
-    { name = "pyobjc-framework-dictionaryservices", marker = "platform_release >= '9'" },
+    { name = "pyobjc-framework-corewlan", marker = "(platform_release >= '10.0' and sys_platform != 'darwin') or (platform_release >= '10' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-cryptotokenkit", marker = "(platform_release >= '14.0' and sys_platform != 'darwin') or (platform_release >= '14' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-datadetection", marker = "(platform_release >= '21.0' and sys_platform != 'darwin') or (platform_release >= '21' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-devicecheck", marker = "(platform_release >= '19.0' and sys_platform != 'darwin') or (platform_release >= '19' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-devicediscoveryextension", marker = "(platform_release >= '24.0' and sys_platform != 'darwin') or (platform_release >= '24' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-dictionaryservices", marker = "(platform_release >= '9.0' and sys_platform != 'darwin') or (platform_release >= '9' and sys_platform == 'darwin')" },
     { name = "pyobjc-framework-discrecording" },
     { name = "pyobjc-framework-discrecordingui" },
     { name = "pyobjc-framework-diskarbitration" },
     { name = "pyobjc-framework-dvdplayback" },
-    { name = "pyobjc-framework-eventkit", marker = "platform_release >= '12'" },
+    { name = "pyobjc-framework-eventkit", marker = "(platform_release >= '12.0' and sys_platform != 'darwin') or (platform_release >= '12' and sys_platform == 'darwin')" },
     { name = "pyobjc-framework-exceptionhandling" },
-    { name = "pyobjc-framework-executionpolicy", marker = "platform_release >= '19'" },
-    { name = "pyobjc-framework-extensionkit", marker = "platform_release >= '22'" },
-    { name = "pyobjc-framework-externalaccessory", marker = "platform_release >= '17'" },
-    { name = "pyobjc-framework-fileprovider", marker = "platform_release >= '19'" },
-    { name = "pyobjc-framework-fileproviderui", marker = "platform_release >= '19'" },
-    { name = "pyobjc-framework-findersync", marker = "platform_release >= '14'" },
-    { name = "pyobjc-framework-fsevents", marker = "platform_release >= '9'" },
+    { name = "pyobjc-framework-executionpolicy", marker = "(platform_release >= '19.0' and sys_platform != 'darwin') or (platform_release >= '19' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-extensionkit", marker = "(platform_release >= '22.0' and sys_platform != 'darwin') or (platform_release >= '22' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-externalaccessory", marker = "(platform_release >= '17.0' and sys_platform != 'darwin') or (platform_release >= '17' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-fileprovider", marker = "(platform_release >= '19.0' and sys_platform != 'darwin') or (platform_release >= '19' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-fileproviderui", marker = "(platform_release >= '19.0' and sys_platform != 'darwin') or (platform_release >= '19' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-findersync", marker = "(platform_release >= '14.0' and sys_platform != 'darwin') or (platform_release >= '14' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-fsevents", marker = "(platform_release >= '9.0' and sys_platform != 'darwin') or (platform_release >= '9' and sys_platform == 'darwin')" },
     { name = "pyobjc-framework-fskit", marker = "platform_release >= '24.4'" },
-    { name = "pyobjc-framework-gamecenter", marker = "platform_release >= '12'" },
-    { name = "pyobjc-framework-gamecontroller", marker = "platform_release >= '13'" },
-    { name = "pyobjc-framework-gamekit", marker = "platform_release >= '12'" },
-    { name = "pyobjc-framework-gameplaykit", marker = "platform_release >= '15'" },
-    { name = "pyobjc-framework-gamesave", marker = "platform_release >= '25'" },
-    { name = "pyobjc-framework-healthkit", marker = "platform_release >= '22'" },
-    { name = "pyobjc-framework-imagecapturecore", marker = "platform_release >= '10'" },
-    { name = "pyobjc-framework-inputmethodkit", marker = "platform_release >= '9'" },
+    { name = "pyobjc-framework-gamecenter", marker = "(platform_release >= '12.0' and sys_platform != 'darwin') or (platform_release >= '12' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-gamecontroller", marker = "(platform_release >= '13.0' and sys_platform != 'darwin') or (platform_release >= '13' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-gamekit", marker = "(platform_release >= '12.0' and sys_platform != 'darwin') or (platform_release >= '12' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-gameplaykit", marker = "(platform_release >= '15.0' and sys_platform != 'darwin') or (platform_release >= '15' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-gamesave", marker = "(platform_release >= '25.0' and sys_platform != 'darwin') or (platform_release >= '25' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-healthkit", marker = "(platform_release >= '22.0' and sys_platform != 'darwin') or (platform_release >= '22' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-imagecapturecore", marker = "(platform_release >= '10.0' and sys_platform != 'darwin') or (platform_release >= '10' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-inputmethodkit", marker = "(platform_release >= '9.0' and sys_platform != 'darwin') or (platform_release >= '9' and sys_platform == 'darwin')" },
     { name = "pyobjc-framework-installerplugins" },
-    { name = "pyobjc-framework-instantmessage", marker = "platform_release >= '9'" },
-    { name = "pyobjc-framework-intents", marker = "platform_release >= '16'" },
-    { name = "pyobjc-framework-intentsui", marker = "platform_release >= '21'" },
+    { name = "pyobjc-framework-instantmessage", marker = "(platform_release >= '9.0' and sys_platform != 'darwin') or (platform_release >= '9' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-intents", marker = "(platform_release >= '16.0' and sys_platform != 'darwin') or (platform_release >= '16' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-intentsui", marker = "(platform_release >= '21.0' and sys_platform != 'darwin') or (platform_release >= '21' and sys_platform == 'darwin')" },
     { name = "pyobjc-framework-iobluetooth" },
     { name = "pyobjc-framework-iobluetoothui" },
-    { name = "pyobjc-framework-iosurface", marker = "platform_release >= '10'" },
-    { name = "pyobjc-framework-ituneslibrary", marker = "platform_release >= '10'" },
-    { name = "pyobjc-framework-kernelmanagement", marker = "platform_release >= '20'" },
+    { name = "pyobjc-framework-iosurface", marker = "(platform_release >= '10.0' and sys_platform != 'darwin') or (platform_release >= '10' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-ituneslibrary", marker = "(platform_release >= '10.0' and sys_platform != 'darwin') or (platform_release >= '10' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-kernelmanagement", marker = "(platform_release >= '20.0' and sys_platform != 'darwin') or (platform_release >= '20' and sys_platform == 'darwin')" },
     { name = "pyobjc-framework-latentsemanticmapping" },
     { name = "pyobjc-framework-launchservices" },
-    { name = "pyobjc-framework-libdispatch", marker = "platform_release >= '12'" },
-    { name = "pyobjc-framework-libxpc", marker = "platform_release >= '12'" },
-    { name = "pyobjc-framework-linkpresentation", marker = "platform_release >= '19'" },
-    { name = "pyobjc-framework-localauthentication", marker = "platform_release >= '14'" },
-    { name = "pyobjc-framework-localauthenticationembeddedui", marker = "platform_release >= '21'" },
-    { name = "pyobjc-framework-mailkit", marker = "platform_release >= '21'" },
-    { name = "pyobjc-framework-mapkit", marker = "platform_release >= '13'" },
-    { name = "pyobjc-framework-mediaaccessibility", marker = "platform_release >= '13'" },
-    { name = "pyobjc-framework-mediaextension", marker = "platform_release >= '24'" },
-    { name = "pyobjc-framework-medialibrary", marker = "platform_release >= '13'" },
-    { name = "pyobjc-framework-mediaplayer", marker = "platform_release >= '16'" },
-    { name = "pyobjc-framework-mediatoolbox", marker = "platform_release >= '13'" },
-    { name = "pyobjc-framework-metal", marker = "platform_release >= '15'" },
-    { name = "pyobjc-framework-metalfx", marker = "platform_release >= '22'" },
-    { name = "pyobjc-framework-metalkit", marker = "platform_release >= '15'" },
-    { name = "pyobjc-framework-metalperformanceshaders", marker = "platform_release >= '17'" },
-    { name = "pyobjc-framework-metalperformanceshadersgraph", marker = "platform_release >= '20'" },
-    { name = "pyobjc-framework-metrickit", marker = "platform_release >= '21'" },
-    { name = "pyobjc-framework-mlcompute", marker = "platform_release >= '20'" },
-    { name = "pyobjc-framework-modelio", marker = "platform_release >= '15'" },
-    { name = "pyobjc-framework-multipeerconnectivity", marker = "platform_release >= '14'" },
-    { name = "pyobjc-framework-naturallanguage", marker = "platform_release >= '18'" },
-    { name = "pyobjc-framework-netfs", marker = "platform_release >= '10'" },
-    { name = "pyobjc-framework-network", marker = "platform_release >= '18'" },
-    { name = "pyobjc-framework-networkextension", marker = "platform_release >= '15'" },
-    { name = "pyobjc-framework-notificationcenter", marker = "platform_release >= '14'" },
-    { name = "pyobjc-framework-opendirectory", marker = "platform_release >= '10'" },
+    { name = "pyobjc-framework-libdispatch", marker = "(platform_release >= '12.0' and sys_platform != 'darwin') or (platform_release >= '12' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-libxpc", marker = "(platform_release >= '12.0' and sys_platform != 'darwin') or (platform_release >= '12' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-linkpresentation", marker = "(platform_release >= '19.0' and sys_platform != 'darwin') or (platform_release >= '19' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-localauthentication", marker = "(platform_release >= '14.0' and sys_platform != 'darwin') or (platform_release >= '14' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-localauthenticationembeddedui", marker = "(platform_release >= '21.0' and sys_platform != 'darwin') or (platform_release >= '21' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-mailkit", marker = "(platform_release >= '21.0' and sys_platform != 'darwin') or (platform_release >= '21' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-mapkit", marker = "(platform_release >= '13.0' and sys_platform != 'darwin') or (platform_release >= '13' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-mediaaccessibility", marker = "(platform_release >= '13.0' and sys_platform != 'darwin') or (platform_release >= '13' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-mediaextension", marker = "(platform_release >= '24.0' and sys_platform != 'darwin') or (platform_release >= '24' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-medialibrary", marker = "(platform_release >= '13.0' and sys_platform != 'darwin') or (platform_release >= '13' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-mediaplayer", marker = "(platform_release >= '16.0' and sys_platform != 'darwin') or (platform_release >= '16' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-mediatoolbox", marker = "(platform_release >= '13.0' and sys_platform != 'darwin') or (platform_release >= '13' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-metal", marker = "(platform_release >= '15.0' and sys_platform != 'darwin') or (platform_release >= '15' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-metalfx", marker = "(platform_release >= '22.0' and sys_platform != 'darwin') or (platform_release >= '22' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-metalkit", marker = "(platform_release >= '15.0' and sys_platform != 'darwin') or (platform_release >= '15' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-metalperformanceshaders", marker = "(platform_release >= '17.0' and sys_platform != 'darwin') or (platform_release >= '17' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-metalperformanceshadersgraph", marker = "(platform_release >= '20.0' and sys_platform != 'darwin') or (platform_release >= '20' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-metrickit", marker = "(platform_release >= '21.0' and sys_platform != 'darwin') or (platform_release >= '21' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-mlcompute", marker = "(platform_release >= '20.0' and sys_platform != 'darwin') or (platform_release >= '20' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-modelio", marker = "(platform_release >= '15.0' and sys_platform != 'darwin') or (platform_release >= '15' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-multipeerconnectivity", marker = "(platform_release >= '14.0' and sys_platform != 'darwin') or (platform_release >= '14' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-naturallanguage", marker = "(platform_release >= '18.0' and sys_platform != 'darwin') or (platform_release >= '18' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-netfs", marker = "(platform_release >= '10.0' and sys_platform != 'darwin') or (platform_release >= '10' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-network", marker = "(platform_release >= '18.0' and sys_platform != 'darwin') or (platform_release >= '18' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-networkextension", marker = "(platform_release >= '15.0' and sys_platform != 'darwin') or (platform_release >= '15' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-notificationcenter", marker = "(platform_release >= '14.0' and sys_platform != 'darwin') or (platform_release >= '14' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-opendirectory", marker = "(platform_release >= '10.0' and sys_platform != 'darwin') or (platform_release >= '10' and sys_platform == 'darwin')" },
     { name = "pyobjc-framework-osakit" },
-    { name = "pyobjc-framework-oslog", marker = "platform_release >= '19'" },
-    { name = "pyobjc-framework-passkit", marker = "platform_release >= '20'" },
-    { name = "pyobjc-framework-pencilkit", marker = "platform_release >= '19'" },
-    { name = "pyobjc-framework-phase", marker = "platform_release >= '21'" },
-    { name = "pyobjc-framework-photos", marker = "platform_release >= '15'" },
-    { name = "pyobjc-framework-photosui", marker = "platform_release >= '15'" },
+    { name = "pyobjc-framework-oslog", marker = "(platform_release >= '19.0' and sys_platform != 'darwin') or (platform_release >= '19' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-passkit", marker = "(platform_release >= '20.0' and sys_platform != 'darwin') or (platform_release >= '20' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-pencilkit", marker = "(platform_release >= '19.0' and sys_platform != 'darwin') or (platform_release >= '19' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-phase", marker = "(platform_release >= '21.0' and sys_platform != 'darwin') or (platform_release >= '21' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-photos", marker = "(platform_release >= '15.0' and sys_platform != 'darwin') or (platform_release >= '15' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-photosui", marker = "(platform_release >= '15.0' and sys_platform != 'darwin') or (platform_release >= '15' and sys_platform == 'darwin')" },
     { name = "pyobjc-framework-preferencepanes" },
-    { name = "pyobjc-framework-pubsub", marker = "platform_release >= '9' and platform_release < '18'" },
-    { name = "pyobjc-framework-pushkit", marker = "platform_release >= '19'" },
+    { name = "pyobjc-framework-pushkit", marker = "(platform_release >= '19.0' and sys_platform != 'darwin') or (platform_release >= '19' and sys_platform == 'darwin')" },
     { name = "pyobjc-framework-quartz" },
-    { name = "pyobjc-framework-quicklookthumbnailing", marker = "platform_release >= '19'" },
-    { name = "pyobjc-framework-replaykit", marker = "platform_release >= '20'" },
-    { name = "pyobjc-framework-safariservices", marker = "platform_release >= '16'" },
-    { name = "pyobjc-framework-safetykit", marker = "platform_release >= '22'" },
-    { name = "pyobjc-framework-scenekit", marker = "platform_release >= '11'" },
+    { name = "pyobjc-framework-quicklookthumbnailing", marker = "(platform_release >= '19.0' and sys_platform != 'darwin') or (platform_release >= '19' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-replaykit", marker = "(platform_release >= '20.0' and sys_platform != 'darwin') or (platform_release >= '20' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-safariservices", marker = "(platform_release >= '16.0' and sys_platform != 'darwin') or (platform_release >= '16' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-safetykit", marker = "(platform_release >= '22.0' and sys_platform != 'darwin') or (platform_release >= '22' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-scenekit", marker = "(platform_release >= '11.0' and sys_platform != 'darwin') or (platform_release >= '11' and sys_platform == 'darwin')" },
     { name = "pyobjc-framework-screencapturekit", marker = "platform_release >= '21.4'" },
     { name = "pyobjc-framework-screensaver" },
-    { name = "pyobjc-framework-screentime", marker = "platform_release >= '20'" },
-    { name = "pyobjc-framework-scriptingbridge", marker = "platform_release >= '9'" },
+    { name = "pyobjc-framework-screentime", marker = "(platform_release >= '20.0' and sys_platform != 'darwin') or (platform_release >= '20' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-scriptingbridge", marker = "(platform_release >= '9.0' and sys_platform != 'darwin') or (platform_release >= '9' and sys_platform == 'darwin')" },
     { name = "pyobjc-framework-searchkit" },
     { name = "pyobjc-framework-security" },
     { name = "pyobjc-framework-securityfoundation" },
     { name = "pyobjc-framework-securityinterface" },
     { name = "pyobjc-framework-securityui", marker = "platform_release >= '24.4'" },
-    { name = "pyobjc-framework-sensitivecontentanalysis", marker = "platform_release >= '23'" },
-    { name = "pyobjc-framework-servicemanagement", marker = "platform_release >= '10'" },
-    { name = "pyobjc-framework-sharedwithyou", marker = "platform_release >= '22'" },
-    { name = "pyobjc-framework-sharedwithyoucore", marker = "platform_release >= '22'" },
-    { name = "pyobjc-framework-shazamkit", marker = "platform_release >= '21'" },
-    { name = "pyobjc-framework-social", marker = "platform_release >= '12'" },
-    { name = "pyobjc-framework-soundanalysis", marker = "platform_release >= '19'" },
-    { name = "pyobjc-framework-speech", marker = "platform_release >= '19'" },
-    { name = "pyobjc-framework-spritekit", marker = "platform_release >= '13'" },
-    { name = "pyobjc-framework-storekit", marker = "platform_release >= '11'" },
-    { name = "pyobjc-framework-symbols", marker = "platform_release >= '23'" },
+    { name = "pyobjc-framework-sensitivecontentanalysis", marker = "(platform_release >= '23.0' and sys_platform != 'darwin') or (platform_release >= '23' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-servicemanagement", marker = "(platform_release >= '10.0' and sys_platform != 'darwin') or (platform_release >= '10' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-sharedwithyou", marker = "(platform_release >= '22.0' and sys_platform != 'darwin') or (platform_release >= '22' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-sharedwithyoucore", marker = "(platform_release >= '22.0' and sys_platform != 'darwin') or (platform_release >= '22' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-shazamkit", marker = "(platform_release >= '21.0' and sys_platform != 'darwin') or (platform_release >= '21' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-social", marker = "(platform_release >= '12.0' and sys_platform != 'darwin') or (platform_release >= '12' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-soundanalysis", marker = "(platform_release >= '19.0' and sys_platform != 'darwin') or (platform_release >= '19' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-speech", marker = "(platform_release >= '19.0' and sys_platform != 'darwin') or (platform_release >= '19' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-spritekit", marker = "(platform_release >= '13.0' and sys_platform != 'darwin') or (platform_release >= '13' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-storekit", marker = "(platform_release >= '11.0' and sys_platform != 'darwin') or (platform_release >= '11' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-symbols", marker = "(platform_release >= '23.0' and sys_platform != 'darwin') or (platform_release >= '23' and sys_platform == 'darwin')" },
     { name = "pyobjc-framework-syncservices" },
     { name = "pyobjc-framework-systemconfiguration" },
-    { name = "pyobjc-framework-systemextensions", marker = "platform_release >= '19'" },
-    { name = "pyobjc-framework-threadnetwork", marker = "platform_release >= '22'" },
-    { name = "pyobjc-framework-uniformtypeidentifiers", marker = "platform_release >= '20'" },
-    { name = "pyobjc-framework-usernotifications", marker = "platform_release >= '18'" },
-    { name = "pyobjc-framework-usernotificationsui", marker = "platform_release >= '20'" },
-    { name = "pyobjc-framework-videosubscriberaccount", marker = "platform_release >= '18'" },
-    { name = "pyobjc-framework-videotoolbox", marker = "platform_release >= '12'" },
-    { name = "pyobjc-framework-virtualization", marker = "platform_release >= '20'" },
-    { name = "pyobjc-framework-vision", marker = "platform_release >= '17'" },
+    { name = "pyobjc-framework-systemextensions", marker = "(platform_release >= '19.0' and sys_platform != 'darwin') or (platform_release >= '19' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-threadnetwork", marker = "(platform_release >= '22.0' and sys_platform != 'darwin') or (platform_release >= '22' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-uniformtypeidentifiers", marker = "(platform_release >= '20.0' and sys_platform != 'darwin') or (platform_release >= '20' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-usernotifications", marker = "(platform_release >= '18.0' and sys_platform != 'darwin') or (platform_release >= '18' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-usernotificationsui", marker = "(platform_release >= '20.0' and sys_platform != 'darwin') or (platform_release >= '20' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-videosubscriberaccount", marker = "(platform_release >= '18.0' and sys_platform != 'darwin') or (platform_release >= '18' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-videotoolbox", marker = "(platform_release >= '12.0' and sys_platform != 'darwin') or (platform_release >= '12' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-virtualization", marker = "(platform_release >= '20.0' and sys_platform != 'darwin') or (platform_release >= '20' and sys_platform == 'darwin')" },
+    { name = "pyobjc-framework-vision", marker = "(platform_release >= '17.0' and sys_platform != 'darwin') or (platform_release >= '17' and sys_platform == 'darwin')" },
     { name = "pyobjc-framework-webkit" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/17/06/d77639ba166cc09aed2d32ae204811b47bc5d40e035cdc9bff7fff72ec5f/pyobjc-12.1.tar.gz", hash = "sha256:686d6db3eb3182fac9846b8ce3eedf4c7d2680b21b8b8d6e6df054a17e92a12d", size = 11345, upload-time = "2025-11-14T10:07:28.155Z" }
@@ -2918,19 +3026,6 @@ wheels = [
 ]
 
 [[package]]
-name = "pyobjc-framework-pubsub"
-version = "12.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "pyobjc-core" },
-    { name = "pyobjc-framework-cocoa" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/85/b6/199b873535d523cda4cbd107859055c7b926950d67fd24e435f524d9c467/pyobjc_framework_pubsub-12.1.tar.gz", hash = "sha256:dc9dea4b2e82eb8e3370b399587b6b3bb1a8b9f9361178a83d608ec82cac0d89", size = 15450, upload-time = "2025-11-14T10:18:55.588Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/53/f1/27bd9c8219857286a50ef53bdd252c0ba8c5908e955dff860c0fca639075/pyobjc_framework_pubsub-12.1-py2.py3-none-any.whl", hash = "sha256:6bf254217645a493edd82090dbe9ab3e4ec97b9d1416a6f126ce3c2f7d7389af", size = 5225, upload-time = "2025-11-14T09:59:05.699Z" },
-]
-
-[[package]]
 name = "pyobjc-framework-pushkit"
 version = "12.1"
 source = { registry = "https://pypi.org/simple" }
@@ -3896,8 +3991,8 @@ resolution-markers = [
     "python_full_version < '3.12'",
 ]
 dependencies = [
-    { name = "pillow" },
-    { name = "rich" },
+    { name = "pillow", marker = "python_full_version < '3.12'" },
+    { name = "rich", marker = "python_full_version < '3.12'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/c2/e7/c82ea0604874b6d51d5717a0911061ae5810e36dad2e4d2b11fa7d54cdaa/textual_image-0.12.0.tar.gz", hash = "sha256:fdd0b5ff9c8a99740bc360a99ce014d563fa97d07a5b49b472470809f57c0a74", size = 116403, upload-time = "2026-04-12T17:37:44.696Z" }
 wheels = [
@@ -3912,8 +4007,8 @@ resolution-markers = [
     "python_full_version >= '3.12'",
 ]
 dependencies = [
-    { name = "pillow" },
-    { name = "rich" },
+    { name = "pillow", marker = "python_full_version >= '3.12'" },
+    { name = "rich", marker = "python_full_version >= '3.12'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/09/19/fb4bca0ed5ff657f15b4d31cd3f415c62bc7c69cbd1ccb87457e025348bc/textual_image-0.14.1.tar.gz", hash = "sha256:502542955452ca6d67e4e0701021eed6bebbe2e1ccee8dfcb42e5083c9573eda", size = 175108, upload-time = "2026-09-25T20:41:48.657Z" }
 wheels = [
@@ -4002,115 +4097,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/ec/0d/915c02c94d207b85580eb09bffab54438a709e7288524094fe781da526c2/virtualenv-21.3.1.tar.gz", hash = "sha256:c2305bc1fddeec40699b8370d13f8d431b0701f00ce895061ce493aeded4426b", size = 7613791, upload-time = "2026-05-05T01:34:31.402Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/b1/4f/f71e641e504111a5a74e3a20bc52d01bd86788b22699dd3fee1c63253cf6/virtualenv-21.3.1-py3-none-any.whl", hash = "sha256:d1a71cf58f2f9228fff23a1f6ec15d39785c6b32e03658d104974247145edd35", size = 7594539, upload-time = "2026-05-05T01:34:28.98Z" },
-]
-
-[[package]]
-name = "viu-media"
-version = "3.5.0"
-source = { editable = "." }
-dependencies = [
-    { name = "click" },
-    { name = "httpx" },
-    { name = "inquirerpy" },
-    { name = "pycryptodomex" },
-    { name = "pydantic" },
-    { name = "rich" },
-]
-
-[package.optional-dependencies]
-discord = [
-    { name = "pypresence" },
-]
-download = [
-    { name = "pycryptodomex" },
-    { name = "yt-dlp" },
-]
-lxml = [
-    { name = "lxml" },
-]
-mpv = [
-    { name = "mpv" },
-]
-notifications = [
-    { name = "dbus-python", marker = "sys_platform == 'linux'" },
-    { name = "plyer" },
-    { name = "pyobjc", marker = "sys_platform == 'darwin'" },
-    { name = "pypiwin32", marker = "sys_platform == 'win32'" },
-]
-standard = [
-    { name = "dbus-python", marker = "sys_platform == 'linux'" },
-    { name = "lxml" },
-    { name = "plyer" },
-    { name = "pycryptodomex" },
-    { name = "pyobjc", marker = "sys_platform == 'darwin'" },
-    { name = "pypiwin32", marker = "sys_platform == 'win32'" },
-    { name = "thefuzz" },
-    { name = "yt-dlp" },
-]
-torrent = [
-    { name = "libtorrent" },
-]
-torrents = [
-    { name = "libtorrent" },
-]
-tui = [
-    { name = "textual" },
-    { name = "textual-image", version = "0.12.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
-    { name = "textual-image", version = "0.14.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "pre-commit" },
-    { name = "pyinstaller" },
-    { name = "pyright" },
-    { name = "pytest" },
-    { name = "pytest-httpx" },
-    { name = "ruff" },
-    { name = "types-lxml" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "click", specifier = ">=8.1.7" },
-    { name = "dbus-python", marker = "sys_platform == 'linux' and extra == 'notifications'", specifier = ">=1.4.0" },
-    { name = "dbus-python", marker = "sys_platform == 'linux' and extra == 'standard'" },
-    { name = "httpx", specifier = ">=0.28.1" },
-    { name = "inquirerpy", specifier = ">=0.3.4" },
-    { name = "libtorrent", marker = "extra == 'torrent'", specifier = ">=2.0.11" },
-    { name = "libtorrent", marker = "extra == 'torrents'", specifier = ">=2.0.11" },
-    { name = "lxml", marker = "extra == 'lxml'", specifier = ">=6.0.0" },
-    { name = "lxml", marker = "extra == 'standard'", specifier = ">=6.0.0" },
-    { name = "mpv", marker = "extra == 'mpv'", specifier = ">=1.0.7" },
-    { name = "plyer", marker = "extra == 'notifications'", specifier = ">=2.1.0" },
-    { name = "plyer", marker = "extra == 'standard'", specifier = ">=2.1.0" },
-    { name = "pycryptodomex", specifier = ">=3.23.0" },
-    { name = "pycryptodomex", marker = "extra == 'download'", specifier = ">=3.23.0" },
-    { name = "pycryptodomex", marker = "extra == 'standard'", specifier = ">=3.23.0" },
-    { name = "pydantic", specifier = ">=2.11.7" },
-    { name = "pyobjc", marker = "sys_platform == 'darwin' and extra == 'notifications'" },
-    { name = "pyobjc", marker = "sys_platform == 'darwin' and extra == 'standard'" },
-    { name = "pypiwin32", marker = "sys_platform == 'win32' and extra == 'notifications'" },
-    { name = "pypiwin32", marker = "sys_platform == 'win32' and extra == 'standard'" },
-    { name = "pypresence", marker = "extra == 'discord'", specifier = ">=4.3.0" },
-    { name = "rich", specifier = ">=13.9.2" },
-    { name = "textual", marker = "extra == 'tui'", specifier = ">=8.0.0" },
-    { name = "textual-image", marker = "extra == 'tui'", specifier = ">=0.12.0" },
-    { name = "thefuzz", marker = "extra == 'standard'", specifier = ">=0.22.1" },
-    { name = "yt-dlp", marker = "extra == 'download'", specifier = ">=2025.7.21" },
-    { name = "yt-dlp", marker = "extra == 'standard'", specifier = ">=2025.7.21" },
-]
-provides-extras = ["standard", "notifications", "mpv", "torrent", "lxml", "discord", "download", "torrents", "tui"]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "pre-commit", specifier = ">=4.0.1" },
-    { name = "pyinstaller", specifier = ">=6.11.1" },
-    { name = "pyright", specifier = ">=1.1.384" },
-    { name = "pytest", specifier = ">=8.3.3" },
-    { name = "pytest-httpx", specifier = ">=0.35.0" },
-    { name = "ruff", specifier = ">=0.6.9" },
-    { name = "types-lxml", specifier = ">=2026.2.16" },
 ]
 
 [[package]]

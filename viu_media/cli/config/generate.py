@@ -27,8 +27,8 @@ CONFIG_HEADER = f"""
 {config_asci}
 #
 # ==============================================================================
-# This is the Viu configuration file. It uses the TOML format.
-# You can modify these values to customize the behavior of Viu.
+# This is the nviu configuration file. It uses the TOML format.
+# You can modify these values to customize the behavior of nviu.
 # For more information on the available options, please refer to the
 # official documentation on GitHub.
 # ==============================================================================

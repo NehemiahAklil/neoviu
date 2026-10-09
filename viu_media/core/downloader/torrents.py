@@ -69,7 +69,7 @@ class TorrentDownloader:
 
         # Configure session settings
         settings = {
-            "user_agent": "Viu/1.0",
+            "user_agent": "nviu/1.0",
             "listen_interfaces": f"0.0.0.0:{self.listen_port}",
             "enable_outgoing_utp": True,
             "enable_incoming_utp": True,

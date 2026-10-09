@@ -11,25 +11,25 @@ from ...core.config import AppConfig
 \b\bExamples:
   # Edit your config in your default editor 
   # NB: If it opens vim or vi exit with `:q`
-  viu config
+  nviu config
 \b
   # Start the interactive configuration wizard
-  viu config --interactive
+  nviu config --interactive
 \b
   # get the path of the config file
-  viu config --path
+  nviu config --path
 \b
   # print desktop entry info
-  viu config --generate-desktop-entry
+  nviu config --generate-desktop-entry
 \b
   # update your config without opening an editor
-  viu --icons --selector fzf --preview full config --update
+  nviu --icons --selector fzf --preview full config --update
 \b 
   # interactively define your config
-  viu config --interactive
+  nviu config --interactive
 \b 
   # view the current contents of your config
-  viu config --view
+  nviu config --view
 """,
 )
 @click.option("--path", "-p", help="Print the config location and exit", is_flag=True)
@@ -45,13 +45,13 @@ from ...core.config import AppConfig
 @click.option(
     "--generate-desktop-entry",
     "-d",
-    help="Generate the desktop entry of viu",
+    help="Generate the desktop entry of nviu",
     is_flag=True,
 )
 @click.option(
     "--update",
     "-u",
-    help="Persist all the config options passed to viu to your config file",
+    help="Persist all the config options passed to nviu to your config file",
     is_flag=True,
 )
 @click.option(
@@ -114,7 +114,7 @@ def config(
 
 def _generate_desktop_entry():
     """
-    Generates a desktop entry for Viu.
+    Generates a desktop entry for nviu.
     """
     import shutil
     import sys
@@ -132,11 +132,11 @@ def _generate_desktop_entry():
         __version__,
     )
 
-    EXECUTABLE = shutil.which("viu")
+    EXECUTABLE = shutil.which("nviu")
     if EXECUTABLE:
         cmds = f"{EXECUTABLE} --selector rofi anilist"
     else:
-        cmds = f"{sys.executable} -m viu --selector rofi anilist"
+        cmds = f"{sys.executable} -m viu_media --selector rofi anilist"
 
     # TODO: Get funs of the other platforms to complete this lol
     if PLATFORM == "win32":

@@ -4,20 +4,24 @@ from importlib import metadata, resources
 from pathlib import Path
 
 PLATFORM = sys.platform
-CLI_NAME = "VIU"
-CLI_NAME_LOWER = "viu"
-PROJECT_NAME = "viu-media"
+CLI_NAME = "NVIU"
+CLI_NAME_LOWER = "nviu"
+PROJECT_NAME = "nviu"
+# Name used for the config, data, and cache directories before the rename to nviu.
+LEGACY_APP_NAME = "viu"
 APP_NAME = os.environ.get(f"{CLI_NAME}_APP_NAME", CLI_NAME_LOWER)
 
 USER_NAME = os.environ.get("USERNAME", os.environ.get("USER", "User"))
 
 
-__version__ = metadata.version("viu_media")
+__version__ = metadata.version(PROJECT_NAME)
 
-AUTHOR = "viu-media"
+AUTHOR = "NehemiahAklil"
+REPO_NAME = "neoviu"
 GIT_REPO = "github.com"
 GIT_PROTOCOL = "https://"
-REPO_HOME = f"https://{GIT_REPO}/{AUTHOR}/Viu"
+REPO_HOME = f"https://{GIT_REPO}/{AUTHOR}/{REPO_NAME}"
+REPO_GIT_URL = f"{REPO_HOME}.git"
 
 DISCORD_INVITE = "https://discord.gg/C4rhMA4mmK"
 
@@ -26,7 +30,7 @@ ANILIST_AUTH = (
 )
 
 try:
-    APP_DIR = Path(str(resources.files(PROJECT_NAME.lower())))
+    APP_DIR = Path(str(resources.files("viu_media")))
 
 except ModuleNotFoundError:
     from pathlib import Path
@@ -42,22 +46,35 @@ ICONS_DIR = ASSETS_DIR / "icons"
 ICON_PATH = ICONS_DIR / ("logo.ico" if PLATFORM == "Win32" else "logo.png")
 APP_ASCII_ART = DEFAULTS_DIR / "ascii-art"
 
-try:
-    import click
 
-    APP_DATA_DIR = Path(click.get_app_dir(APP_NAME, roaming=False))
-except ModuleNotFoundError:
-    if PLATFORM == "win32":
-        folder = os.environ.get("LOCALAPPDATA")
-        if folder is None:
-            folder = Path.home()
-        APP_DATA_DIR = Path(folder) / APP_NAME
-    if PLATFORM == "darwin":
-        APP_DATA_DIR = Path(Path.home() / "Library" / "Application Support" / APP_NAME)
+def _app_data_dir(app_name: str) -> Path:
+    try:
+        import click
 
-    APP_DATA_DIR = (
-        Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / APP_NAME
-    )
+        return Path(click.get_app_dir(app_name, roaming=False))
+    except ModuleNotFoundError:
+        if PLATFORM == "win32":
+            return Path(os.environ.get("LOCALAPPDATA") or Path.home()) / app_name
+        if PLATFORM == "darwin":
+            return Path.home() / "Library" / "Application Support" / app_name
+        return (
+            Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / app_name
+        )
+
+
+APP_DATA_DIR = _app_data_dir(APP_NAME)
+
+# Carry config, logins, and history over from a pre-rename install. The old
+# directory is copied, not moved, so an upstream Viu install keeps working.
+if APP_NAME == CLI_NAME_LOWER and not APP_DATA_DIR.exists():
+    _legacy_data_dir = _app_data_dir(LEGACY_APP_NAME)
+    if _legacy_data_dir.is_dir():
+        import shutil
+
+        try:
+            shutil.copytree(_legacy_data_dir, APP_DATA_DIR)
+        except OSError:
+            pass
 
 if PLATFORM == "win32":
     APP_CACHE_DIR = APP_DATA_DIR / "cache"
@@ -86,4 +103,4 @@ USER_VIDEOS_DIR.mkdir(parents=True, exist_ok=True)
 USER_CONFIG = APP_DATA_DIR / "config.toml"
 
 LOG_FILE = LOG_FOLDER / "app.log"
-SUPPORT_PROJECT_URL = "https://github.com/viu-media/viu"
+SUPPORT_PROJECT_URL = REPO_HOME

@@ -11,12 +11,12 @@ from urllib.parse import parse_qs, urlparse
 logger = logging.getLogger(__name__)
 
 _SUCCESS_PAGE = b"""<!doctype html><html><head><meta charset="utf-8">
-<title>viu login</title></head><body style="font-family:sans-serif;padding:3rem">
+<title>nviu login</title></head><body style="font-family:sans-serif;padding:3rem">
 <h2>Login received.</h2><p>You can close this tab and return to the terminal.</p>
 </body></html>"""
 
 _ERROR_PAGE = b"""<!doctype html><html><head><meta charset="utf-8">
-<title>viu login</title></head><body style="font-family:sans-serif;padding:3rem">
+<title>nviu login</title></head><body style="font-family:sans-serif;padding:3rem">
 <h2>Login failed.</h2><p>Return to the terminal for details.</p>
 </body></html>"""
 

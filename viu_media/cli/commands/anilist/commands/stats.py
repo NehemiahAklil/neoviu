@@ -38,7 +38,7 @@ def stats(config: "AppConfig"):
                 )
                 feedback.info(
                     "Run this command to authenticate:",
-                    f"viu {config.general.media_api} auth",
+                    f"nviu {config.general.media_api} auth",
                 )
                 raise click.Abort()
 

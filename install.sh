@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# neoviu installer for Linux, macOS, and Termux.
+# nviu installer for Linux, macOS, and Termux.
 #
 #   curl -fsSL https://raw.githubusercontent.com/NehemiahAklil/neoviu/master/install.sh | bash
 #
@@ -53,19 +53,19 @@ SCRIPT_DIR=""
 if [ -n "${BASH_SOURCE[0]-}" ] && [ -f "${BASH_SOURCE[0]}" ]; then
   SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 fi
-is_checkout() { [ -n "$SCRIPT_DIR" ] && grep -q '^name = "viu-media"' "$SCRIPT_DIR/pyproject.toml" 2>/dev/null; }
+is_checkout() { [ -n "$SCRIPT_DIR" ] && grep -q '^name = "nviu"' "$SCRIPT_DIR/pyproject.toml" 2>/dev/null; }
 
 if [ "$MODE" = "auto" ]; then
   if is_checkout; then MODE="local"; else MODE="remote"; fi
 fi
 if [ "$MODE" = "local" ] && ! is_checkout; then
-  die "--local needs to be run from a neoviu checkout"
+  die "--local needs to be run from an nviu checkout"
 fi
 
 IS_TERMUX=0
 if [ -n "${TERMUX_VERSION-}" ] || [ -d /data/data/com.termux ]; then IS_TERMUX=1; fi
 
-bold "Installing neoviu"
+bold "Installing nviu"
 
 # --- uv --------------------------------------------------------------------
 # uv also downloads a suitable Python (3.11+) when the system one is too old.
@@ -99,7 +99,7 @@ spec_for() {
   if [ "$MODE" = "local" ]; then
     printf '%s%s' "$SCRIPT_DIR" "$suffix"
   else
-    printf 'viu-media%s @ git+%s@%s' "$suffix" "$REPO_URL" "$REF"
+    printf 'nviu%s @ git+%s@%s' "$suffix" "$REPO_URL" "$REF"
   fi
 }
 
@@ -135,10 +135,18 @@ uv tool update-shell >/dev/null 2>&1 || true
 BIN_DIR="$(uv tool dir --bin 2>/dev/null || echo "$HOME/.local/bin")"
 export PATH="$BIN_DIR:$PATH"
 
-if ! command -v viu >/dev/null 2>&1; then
-  die "viu was installed to $BIN_DIR but can't be run; add that directory to PATH"
+if ! command -v nviu >/dev/null 2>&1; then
+  die "nviu was installed to $BIN_DIR but can't be run; add that directory to PATH"
 fi
-info "Installed: $(viu --version)"
+info "Installed: $(nviu --version)"
+
+# Before the rename, this project installed as the viu-media package with a
+# `viu` command. Leave it alone (it may be upstream Viu) but point it out.
+if uv tool list 2>/dev/null | grep -q '^viu-media '; then
+  echo
+  warn "an older 'viu-media' install (the 'viu' command) is still present."
+  echo "  nviu replaces it and has copied its settings. Remove it with: uv tool uninstall viu-media"
+fi
 
 # --- external tools ----------------------------------------------------------
 missing=()
@@ -164,8 +172,8 @@ if [ ${#missing[@]} -gt 0 ]; then
 fi
 
 echo
-bold "Done! Run 'viu --help' to get started."
+bold "Done! Run 'nviu --help' to get started."
 case ":$PATH:" in
 *":$BIN_DIR:"*) ;;
-*) echo "Open a new terminal (or run: export PATH=\"$BIN_DIR:\$PATH\") so 'viu' is on your PATH." ;;
+*) echo "Open a new terminal (or run: export PATH=\"$BIN_DIR:\$PATH\") so 'nviu' is on your PATH." ;;
 esac

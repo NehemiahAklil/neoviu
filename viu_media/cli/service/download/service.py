@@ -129,7 +129,7 @@ class DownloadService:
                 self._submit_download(record.media_item, episode_number)
             else:
                 logger.error(
-                    f"Could not find metadata for media ID {media_id}. Cannot resume. Please run 'viu registry sync'."
+                    f"Could not find metadata for media ID {media_id}. Cannot resume. Please run 'nviu registry sync'."
                 )
 
     def retry_failed_downloads(self):
@@ -172,7 +172,7 @@ class DownloadService:
 
             else:
                 logger.error(
-                    f"Could not find metadata for media ID {media_id}. Cannot resume. Please run 'viu registry sync'."
+                    f"Could not find metadata for media ID {media_id}. Cannot resume. Please run 'nviu registry sync'."
                 )
 
     def _execute_download_job(self, media_item: MediaItem, episode_number: str):
@@ -296,9 +296,9 @@ class DownloadService:
                     app_icon = str(icon_path) if icon_path else None
 
                     notification.notify(  # type: ignore
-                        title="Viu: New Episode",
+                        title="nviu: New Episode",
                         message=message,
-                        app_name="Viu",
+                        app_name="nviu",
                         app_icon=app_icon,
                         timeout=self.app_config.general.desktop_notification_duration,
                     )
@@ -317,9 +317,9 @@ class DownloadService:
                 app_icon = str(icon_path) if icon_path else None
 
                 notification.notify(  # type: ignore
-                    title="Viu: New Episode",
+                    title="nviu: New Episode",
                     message=message,
-                    app_name="Viu",
+                    app_name="nviu",
                     app_icon=app_icon,
                     timeout=self.app_config.general.desktop_notification_duration,
                 )

@@ -48,7 +48,7 @@ class ConfigLoader:
     def _handle_first_run(self) -> AppConfig:
         """Handles the configuration process when no config.toml file is found."""
         click.echo(
-            "[bold yellow]Welcome to Viu![/bold yellow] No configuration file found."
+            "[bold yellow]Welcome to nviu![/bold yellow] No configuration file found."
         )
         from InquirerPy import inquirer
 
@@ -152,7 +152,7 @@ class ConfigLoader:
             message = (
                 "Removed provider settings replaced: "
                 + "; ".join(migrations)
-                + ". Run 'viu config --update' to save these changes."
+                + ". Run 'nviu config --update' to save these changes."
             )
             logger.warning(message)
             click.secho(message, fg="yellow", err=True)

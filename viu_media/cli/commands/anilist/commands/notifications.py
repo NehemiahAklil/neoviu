@@ -25,7 +25,7 @@ def notifications(config: AppConfig):
 
     if not api_client.is_authenticated():
         feedback.error(
-            "Authentication Required", "Please log in with 'viu anilist auth'."
+            "Authentication Required", "Please log in with 'nviu anilist auth'."
         )
         return
 

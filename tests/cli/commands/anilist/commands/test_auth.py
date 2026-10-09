@@ -56,7 +56,7 @@ def test_auth_with_token_argument(
     mock_selector,
     mock_api_client,
 ):
-    """Test 'viu anilist auth <token>'."""
+    """Test 'nviu anilist auth <token>'."""
     api_client_instance = mock_api_client.return_value
     profile_mock = MagicMock()
     profile_mock.name = "testuser"
@@ -86,7 +86,7 @@ def test_auth_with_token_file(
     mock_api_client,
     tmp_path,
 ):
-    """Test 'viu anilist auth <path/to/token.txt>'."""
+    """Test 'nviu anilist auth <path/to/token.txt>'."""
     token_file = tmp_path / "token.txt"
     token_file.write_text("file_token")
 
@@ -119,7 +119,7 @@ def test_auth_with_empty_token_file(
     mock_api_client,
     tmp_path,
 ):
-    """Test 'viu anilist auth' with an empty token file."""
+    """Test 'nviu anilist auth' with an empty token file."""
     token_file = tmp_path / "token.txt"
     token_file.write_text("")
 
@@ -142,7 +142,7 @@ def test_auth_interactive(
     mock_api_client,
     mock_webbrowser,
 ):
-    """Test 'viu anilist auth' interactive mode."""
+    """Test 'nviu anilist auth' interactive mode."""
     mock_webbrowser.open.return_value = True
 
     selector_instance = mock_selector.return_value
@@ -171,7 +171,7 @@ def test_auth_interactive(
 def test_auth_status_logged_in(
     runner, mock_config, mock_auth_service, mock_feedback_service
 ):
-    """Test 'viu anilist auth --status' when logged in."""
+    """Test 'nviu anilist auth --status' when logged in."""
     auth_service_instance = mock_auth_service.return_value
     user_data_mock = MagicMock()
     user_data_mock.user_profile = "testuser"
@@ -187,7 +187,7 @@ def test_auth_status_logged_in(
 def test_auth_status_logged_out(
     runner, mock_config, mock_auth_service, mock_feedback_service
 ):
-    """Test 'viu anilist auth --status' when logged out."""
+    """Test 'nviu anilist auth --status' when logged out."""
     auth_service_instance = mock_auth_service.return_value
     auth_service_instance.get_auth.return_value = None
 
@@ -201,7 +201,7 @@ def test_auth_status_logged_out(
 def test_auth_logout(
     runner, mock_config, mock_auth_service, mock_feedback_service, mock_selector
 ):
-    """Test 'viu anilist auth --logout'."""
+    """Test 'nviu anilist auth --logout'."""
     selector_instance = mock_selector.return_value
     selector_instance.confirm.return_value = True
 
@@ -217,7 +217,7 @@ def test_auth_logout(
 def test_auth_logout_cancel(
     runner, mock_config, mock_auth_service, mock_feedback_service, mock_selector
 ):
-    """Test 'viu anilist auth --logout' when user cancels."""
+    """Test 'nviu anilist auth --logout' when user cancels."""
     selector_instance = mock_selector.return_value
     selector_instance.confirm.return_value = False
 
@@ -236,7 +236,7 @@ def test_auth_already_logged_in_relogin_yes(
     mock_selector,
     mock_api_client,
 ):
-    """Test 'viu anilist auth' when already logged in and user chooses to relogin."""
+    """Test 'nviu anilist auth' when already logged in and user chooses to relogin."""
     auth_service_instance = mock_auth_service.return_value
     auth_profile_mock = MagicMock()
     auth_profile_mock.user_profile.name = "testuser"
@@ -267,7 +267,7 @@ def test_auth_already_logged_in_relogin_yes(
 def test_auth_already_logged_in_relogin_no(
     runner, mock_config, mock_auth_service, mock_feedback_service, mock_selector
 ):
-    """Test 'viu anilist auth' when already logged in and user chooses not to relogin."""
+    """Test 'nviu anilist auth' when already logged in and user chooses not to relogin."""
     auth_service_instance = mock_auth_service.return_value
     auth_profile_mock = MagicMock()
     auth_profile_mock.user_profile.name = "testuser"

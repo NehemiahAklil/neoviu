@@ -97,9 +97,9 @@ class NotificationService:
                 # Assert for type checkers and runtime safety
                 assert plyer_notification is not None
                 plyer_notification.notify(  # type: ignore
-                    title="Viu: New Episode",
+                    title="nviu: New Episode",
                     message=message,
-                    app_name="Viu",
+                    app_name="nviu",
                     app_icon=app_icon,  # plyer supports file paths or URLs depending on platform
                     timeout=self.app_config.general.desktop_notification_duration,
                 )
