@@ -52,6 +52,7 @@ search_params_map = {
     "per_page": "per_page",
     "sort": "sort",
     "id_in": "id_in",
+    "id_mal_in": "id_mal_in",
     "genre_in": "genre_in",
     "genre_not_in": "genre_not_in",
     "tag_in": "tag_in",

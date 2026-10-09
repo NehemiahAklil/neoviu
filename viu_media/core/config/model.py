@@ -224,6 +224,10 @@ class GeneralConfig(BaseModel):
         ge=0,
         description=desc.GENERAL_RECENT,
     )
+    interface: Literal["classic", "grid"] = Field(
+        default=defaults.GENERAL_INTERFACE,
+        description=desc.GENERAL_INTERFACE,
+    )
 
 
 class StreamConfig(BaseModel):
@@ -436,6 +440,33 @@ class JikanConfig(OtherConfig):
     )
 
 
+class TrackingConfig(OtherConfig):
+    """Configuration for syncing watch progress with AniList and MyAnimeList."""
+
+    remote: Literal["none", "anilist", "myanimelist", "both"] = Field(
+        default=defaults.TRACKING_REMOTE,
+        description=desc.TRACKING_REMOTE,
+    )
+    prompt_login: bool = Field(
+        default=defaults.TRACKING_PROMPT_LOGIN,
+        description=desc.TRACKING_PROMPT_LOGIN,
+    )
+    mal_client_id: str = Field(
+        default=defaults.TRACKING_MAL_CLIENT_ID,
+        description=desc.TRACKING_MAL_CLIENT_ID,
+    )
+    mal_client_secret: str = Field(
+        default=defaults.TRACKING_MAL_CLIENT_SECRET,
+        description=desc.TRACKING_MAL_CLIENT_SECRET,
+    )
+    mal_redirect_port: int = Field(
+        default=defaults.TRACKING_MAL_REDIRECT_PORT,
+        gt=0,
+        lt=65536,
+        description=desc.TRACKING_MAL_REDIRECT_PORT,
+    )
+
+
 class DownloadsConfig(OtherConfig):
     """Configuration for download related options"""
 
@@ -524,6 +555,10 @@ class AppConfig(BaseModel):
     jikan: JikanConfig = Field(
         default_factory=JikanConfig,
         description=desc.APP_JIKAN,
+    )
+    tracking: TrackingConfig = Field(
+        default_factory=TrackingConfig,
+        description=desc.APP_TRACKING,
     )
     fzf: FzfConfig = Field(
         default_factory=FzfConfig,

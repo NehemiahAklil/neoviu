@@ -176,17 +176,26 @@ def _create_user_list_action(
     """A factory to create menu actions for fetching user lists, handling authentication."""
 
     def action():
+        from ....utils.tracker_login import ensure_tracking
+
         feedback = ctx.feedback
-        if not ctx.media_api.is_authenticated():
-            feedback.error("You haven't logged in")
+        if not ensure_tracking(ctx.tracking, ctx.selector, feedback):
+            feedback.error(
+                "You haven't logged in to a tracker",
+                "Run 'viu tracker login' to connect AniList or MyAnimeList.",
+            )
             return InternalDirective.MAIN
 
-        search_params = UserMediaListSearchParams(status=status)
+        search_params = UserMediaListSearchParams(
+            status=status, per_page=ctx.config.anilist.per_page
+        )
 
         loading_message = "Fetching media list"
         result = None
         with feedback.progress(loading_message):
-            result = ctx.media_api.search_media_list(search_params)
+            result = ctx.tracking.get_user_list(
+                status, page=1, per_page=search_params.per_page
+            )
 
         if result:
             return State(

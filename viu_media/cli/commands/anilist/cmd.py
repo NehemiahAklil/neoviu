@@ -39,5 +39,10 @@ def anilist(ctx: click.Context, resume: bool):
     config = ctx.obj
 
     if ctx.invoked_subcommand is None:
+        if config.general.interface == "grid":
+            from ...tui import run_tui
+
+            run_tui(config)
+            return
         session.load_menus_from_folder("media")
         session.run(config, resume=resume)

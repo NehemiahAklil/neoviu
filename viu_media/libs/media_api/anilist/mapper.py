@@ -156,14 +156,33 @@ def _to_generic_studios(anilist_studios: AnilistStudioNodes) -> List[Studio]:
 
 
 def _to_generic_tags(anilist_tags: list[AnilistMediaTag]) -> List[MediaTagItem]:
-    """Maps a list of AniList tags to generic MediaTag objects."""
+    """Maps a list of AniList tags to generic MediaTag objects.
+
+    AniList adds new tags over time; unknown ones are skipped so a single new
+    tag cannot break a whole page of results.
+    """
     if not anilist_tags:
         return []
-    return [
-        MediaTagItem(name=MediaTag(t["name"]), rank=t.get("rank"))
-        for t in anilist_tags
-        if t and t.get("name")
-    ]
+    tags: List[MediaTagItem] = []
+    for t in anilist_tags:
+        if not t or not t.get("name"):
+            continue
+        try:
+            tags.append(MediaTagItem(name=MediaTag(t["name"]), rank=t.get("rank")))
+        except ValueError:
+            logger.debug(f"Skipping unknown AniList tag: {t['name']}")
+    return tags
+
+
+def _to_generic_genres(anilist_genres: Optional[List[str]]) -> List[MediaGenre]:
+    """Maps AniList genres, skipping any genre added after this enum was written."""
+    genres: List[MediaGenre] = []
+    for genre in anilist_genres or []:
+        try:
+            genres.append(MediaGenre(genre))
+        except ValueError:
+            logger.debug(f"Skipping unknown AniList genre: {genre}")
+    return genres
 
 
 def _to_generic_streaming_episodes(
@@ -244,7 +263,7 @@ def _to_generic_media_item(
         description=data.get("description"),
         episodes=data.get("episodes"),
         duration=data.get("duration"),
-        genres=[MediaGenre(genre) for genre in data["genres"]],
+        genres=_to_generic_genres(data.get("genres")),
         tags=_to_generic_tags(data.get("tags")),
         studios=_to_generic_studios(data.get("studios")),
         synonymns=data.get("synonyms", []),

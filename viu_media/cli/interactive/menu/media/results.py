@@ -151,7 +151,7 @@ def _handle_pagination(
 
     # Determine which type of search to perform based on stored parameters
     if isinstance(search_params, UserMediaListSearchParams):
-        if not ctx.media_api.is_authenticated():
+        if not ctx.tracking.can_track:
             feedback.error("You haven't logged in")
             return InternalDirective.RELOAD
 
@@ -164,7 +164,11 @@ def _handle_pagination(
             **search_params_dict, page=new_page
         )
         with feedback.progress(loading_message):
-            result = ctx.media_api.search_media_list(new_search_params)
+            result = ctx.tracking.get_user_list(
+                new_search_params.status,
+                page=new_page,
+                per_page=new_search_params.per_page,
+            )
 
         if result:
             return State(

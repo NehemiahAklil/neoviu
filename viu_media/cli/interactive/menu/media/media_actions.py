@@ -3,7 +3,6 @@ from typing import Callable, Dict, Literal, Optional
 from .....libs.media_api.params import (
     MediaRecommendationParams,
     MediaRelationsParams,
-    UpdateUserMediaListEntryParams,
 )
 from .....libs.media_api.types import (
     MediaItem,
@@ -202,7 +201,9 @@ def _manage_user_media_list(ctx: Context, state: State) -> MenuAction:
         if not media_item:
             return InternalDirective.RELOAD
 
-        if not ctx.media_api.is_authenticated():
+        from ....utils.tracker_login import ensure_tracking
+
+        if not ensure_tracking(ctx.tracking, ctx.selector, feedback):
             feedback.warning(
                 "You are not authenticated",
             )
@@ -219,12 +220,10 @@ def _manage_user_media_list(ctx: Context, state: State) -> MenuAction:
                 status=UserMediaListStatus(status),
             )
             # remote
-            if not ctx.media_api.update_list_entry(
-                UpdateUserMediaListEntryParams(
-                    media_item.id, status=UserMediaListStatus(status)
-                )
-            ):
-                print(f"Failed to update {media_item.title.english}")
+            results = ctx.tracking.update(
+                media_item, status=UserMediaListStatus(status)
+            )
+            _report_sync(ctx, media_item, results)
         return InternalDirective.RELOAD
 
     return action
@@ -238,7 +237,9 @@ def _manage_user_media_list_in_bulk(ctx: Context, state: State) -> MenuAction:
         if not search_result:
             return InternalDirective.RELOAD
 
-        if not ctx.media_api.is_authenticated():
+        from ....utils.tracker_login import ensure_tracking
+
+        if not ensure_tracking(ctx.tracking, ctx.selector, feedback):
             feedback.warning(
                 "You are not authenticated",
             )
@@ -289,13 +290,10 @@ def _manage_user_media_list_in_bulk(ctx: Context, state: State) -> MenuAction:
                     status=UserMediaListStatus(status),
                 )
                 # remote
-
-                if not ctx.media_api.update_list_entry(
-                    UpdateUserMediaListEntryParams(
-                        media_item.id, status=UserMediaListStatus(status)
-                    )
-                ):
-                    print(f"Failed to update {media_item.title.english}")
+                results = ctx.tracking.update(
+                    media_item, status=UserMediaListStatus(status)
+                )
+                _report_sync(ctx, media_item, results)
 
                 progress.update(task_id, advance=1)  # type: ignore
         return InternalDirective.RELOAD
@@ -357,7 +355,9 @@ def _score_anime(ctx: Context, state: State) -> MenuAction:
         if not media_item:
             return InternalDirective.RELOAD
 
-        if not ctx.media_api.is_authenticated():
+        from ....utils.tracker_login import ensure_tracking
+
+        if not ensure_tracking(ctx.tracking, ctx.selector, feedback):
             return InternalDirective.RELOAD
 
         score_str = ctx.selector.ask("Enter score (0.0 - 10.0):")
@@ -370,9 +370,7 @@ def _score_anime(ctx: Context, state: State) -> MenuAction:
                 media_id=media_item.id, media_item=media_item, score=score
             )
             # remote
-            ctx.media_api.update_list_entry(
-                UpdateUserMediaListEntryParams(media_id=media_item.id, score=score)
-            )
+            _report_sync(ctx, media_item, ctx.tracking.update(media_item, score=score))
         except (ValueError, TypeError):
             feedback.error(
                 "Invalid score entered", "Please enter a number between 0.0 and 10.0"
@@ -380,6 +378,16 @@ def _score_anime(ctx: Context, state: State) -> MenuAction:
         return InternalDirective.RELOAD
 
     return action
+
+
+def _report_sync(ctx: Context, media_item: MediaItem, results: Dict[str, bool]):
+    from ....service.tracking import TRACKER_LABELS
+
+    failed = [TRACKER_LABELS[name] for name, ok in results.items() if not ok]
+    if failed:
+        ctx.feedback.warning(
+            f"Failed to update {media_item.title.english} on {', '.join(failed)}"
+        )
 
 
 def _view_info(ctx: Context, state: State) -> MenuAction:

@@ -23,17 +23,30 @@ class AuthService:
         auth = self._load_auth()
         return auth.profiles.get(self.media_api)
 
-    def save_user_profile(self, profile: UserProfile, token: str) -> None:
+    def save_user_profile(
+        self,
+        profile: UserProfile,
+        token: str,
+        refresh_token: Optional[str] = None,
+        expires_at: Optional[float] = None,
+    ) -> None:
         auth = self._load_auth()
-        auth.profiles[self.media_api] = AuthProfile(user_profile=profile, token=token)
+        auth.profiles[self.media_api] = AuthProfile(
+            user_profile=profile,
+            token=token,
+            refresh_token=refresh_token,
+            expires_at=expires_at,
+        )
         self._save_auth(auth)
-        logger.info(f"Successfully saved user credentials to {self.path}")
 
     def clear_user_profile(self) -> None:
-        """Deletes the user credentials file."""
-        if self.path.exists():
-            self.path.unlink()
-            logger.info("Cleared user credentials.")
+        """Removes this service's saved credentials, keeping other profiles."""
+        if not self.path.exists():
+            return
+        auth = self._load_auth()
+        if auth.profiles.pop(self.media_api, None) is not None:
+            self._save_auth(auth)
+            logger.info(f"Cleared {self.media_api} credentials.")
 
     def _load_auth(self) -> AuthModel:
         if not self.path.exists():

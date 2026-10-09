@@ -34,6 +34,8 @@ commands = {
     "config": "config.config",
     "search": "search.search",
     "anilist": "anilist.anilist",
+    "tui": "tui.tui",
+    "tracker": "tracker.tracker",
     "download": "download.download",
     "update": "update.update",
     "registry": "registry.registry",

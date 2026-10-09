@@ -23,6 +23,7 @@ class MediaSearchParams:
 
     # IDs
     id_in: Optional[List[int]] = None
+    id_mal_in: Optional[List[int]] = None
 
     # Genres
     genre_in: Optional[List[MediaGenre]] = None

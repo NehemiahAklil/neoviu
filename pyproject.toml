@@ -40,6 +40,7 @@ lxml = ["lxml>=6.0.0"]
 discord = ["pypresence>=4.3.0"]
 download = ["pycryptodomex>=3.23.0", "yt-dlp>=2025.7.21"]
 torrents = ["libtorrent>=2.0.11"]
+tui = ["textual>=8.0.0", "textual-image>=0.12.0"]
 
 [build-system]
 requires = ["hatchling"]

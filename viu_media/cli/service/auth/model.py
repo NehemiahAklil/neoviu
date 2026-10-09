@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Optional
 
 from pydantic import BaseModel, Field
 
@@ -10,6 +10,9 @@ AUTH_VERSION = "1.0"
 class AuthProfile(BaseModel):
     user_profile: UserProfile
     token: str
+    refresh_token: Optional[str] = None
+    # Unix timestamp after which the access token must be refreshed.
+    expires_at: Optional[float] = None
 
 
 class AuthModel(BaseModel):

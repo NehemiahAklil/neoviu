@@ -38,6 +38,10 @@ GENERAL_NORMALIZE_TITLES = (
 )
 GENERAL_DISCORD = "Enable Discord Rich Presence to show your current activity."
 GENERAL_RECENT = "Number of recently watched anime to keep in history."
+GENERAL_INTERFACE = (
+    "The interface 'viu anilist' opens: 'classic' selector menus or the 'grid' "
+    "TUI (requires the viu-media[tui] extra)."
+)
 
 # StreamConfig
 STREAM_PLAYER = "The media player to use for streaming."
@@ -102,6 +106,26 @@ ANILIST_SORT_BY = "Default sort order for AniList search results."
 ANILIST_MEDIA_LIST_SORT_BY = "Default medai list sort order for AniList search results."
 ANILIST_PREFERRED_LANGUAGE = "Preferred language for anime titles from AniList."
 
+# TrackingConfig
+TRACKING_REMOTE = (
+    "Which sites receive your list status, progress and score: 'none' keeps "
+    "history local, or sync with 'anilist', 'myanimelist' or 'both'."
+)
+TRACKING_PROMPT_LOGIN = "Ask you to log in when a configured tracker is not connected."
+TRACKING_MAL_CLIENT_ID = (
+    "Client ID of your MyAnimeList API app (create one at "
+    "https://myanimelist.net/apiconfig). Falls back to the VIU_MAL_CLIENT_ID "
+    "environment variable."
+)
+TRACKING_MAL_CLIENT_SECRET = (
+    "Client secret of your MyAnimeList API app, only needed for 'web' apps. "
+    "Falls back to the VIU_MAL_CLIENT_SECRET environment variable."
+)
+TRACKING_MAL_REDIRECT_PORT = (
+    "Local port for the MyAnimeList login callback. Your MAL app's redirect URL "
+    "must be http://localhost:<port>/callback."
+)
+
 # DownloadsConfig
 DOWNLOADS_DOWNLOADER = "The downloader to use"
 DOWNLOADS_DOWNLOADS_DIR = "The default directory to save downloaded anime."
@@ -128,6 +152,7 @@ APP_STREAM = "Settings related to video streaming and playback."
 APP_DOWNLOADS = "Settings related to downloading"
 APP_ANILIST = "Configuration for AniList API integration."
 APP_JIKAN = "Configuration for Jikan API integration."
+APP_TRACKING = "Syncing list status and progress with AniList and MyAnimeList."
 APP_SERVICE = "Configuration for the background download service."
 APP_FZF = "Settings for the FZF selector interface."
 APP_ROFI = "Settings for the Rofi selector interface."

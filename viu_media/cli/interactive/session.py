@@ -23,6 +23,7 @@ if TYPE_CHECKING:
     from ..service.player import PlayerService
     from ..service.registry import MediaRegistryService
     from ..service.session import SessionsService
+    from ..service.tracking import TrackingService
     from ..service.watch_history import WatchHistoryService
 
 logger = logging.getLogger(__name__)
@@ -96,6 +97,7 @@ class Context:
     _session: Optional["SessionsService"] = None
     _auth: Optional["AuthService"] = None
     _player: Optional["PlayerService"] = None
+    _tracking: Optional["TrackingService"] = None
 
     @property
     def provider(self) -> "BaseAnimeProvider":
@@ -185,9 +187,17 @@ class Context:
             from ..service.watch_history.service import WatchHistoryService
 
             self._watch_history = WatchHistoryService(
-                self.config, self.media_registry, self.media_api
+                self.config, self.media_registry, self.media_api, self.tracking
             )
         return self._watch_history
+
+    @property
+    def tracking(self) -> "TrackingService":
+        if not self._tracking:
+            from ..service.tracking import TrackingService
+
+            self._tracking = TrackingService(self.config, self.media_api)
+        return self._tracking
 
     @property
     def session(self) -> "SessionsService":
@@ -219,10 +229,13 @@ class Session:
     _context: Context
     _history: List[State] = []
     _menus: dict[MenuName, Menu] = {}
+    _embedded: bool = False
 
     def _shutdown_download_worker(self):
         if hasattr(self, "_context") and self._context._download:
             thread_manager.shutdown_worker("download_worker", wait=False, timeout=5.0)
+            # A reused (embedded) context must build a fresh worker next time.
+            self._context._download = None
 
     def _load_context(self, config: AppConfig):
         self._shutdown_download_worker()
@@ -243,8 +256,23 @@ class Session:
         config: AppConfig,
         resume: bool = False,
         history: Optional[List[State]] = None,
+        *,
+        context: Optional[Context] = None,
+        embedded: bool = False,
     ):
-        self._load_context(config)
+        """Runs the menu loop.
+
+        With ``embedded=True`` (used by the grid TUI) the first history entry is
+        a parent that is never shown: the loop returns to the caller as soon as
+        navigation goes back to it or to the main menu, and the session is not
+        saved over the user's last classic session.
+        """
+        self._embedded = embedded
+        if context is not None:
+            self._shutdown_download_worker()
+            self._context = context
+        else:
+            self._load_context(config)
         if resume:
             if history := self._context.session.get_default_session_history():
                 self._history = history
@@ -265,7 +293,8 @@ class Session:
             self._shutdown_download_worker()
             # Clean up preview workers when session ends
             self._cleanup_preview_workers()
-        self._context.session.save_session(self._history)
+        if not embedded:
+            self._context.session.save_session(self._history)
 
     def _cleanup_preview_workers(self):
         """Clean up preview workers when session ends."""
@@ -280,6 +309,8 @@ class Session:
     def _run_main_loop(self):
         """Run the main session loop."""
         while self._history:
+            if self._embedded and len(self._history) <= 1:
+                break
             current_state = self._history[-1]
 
             try:
@@ -296,6 +327,8 @@ class Session:
 
             if isinstance(next_step, InternalDirective):
                 if next_step == InternalDirective.MAIN:
+                    if self._embedded:
+                        break
                     self._history = [self._history[0]]
                 elif next_step == InternalDirective.RELOAD:
                     continue
