@@ -137,10 +137,10 @@ EPISODE_PATTERN = re.compile(r"^Episode\s+(\d+)\s-\s.*")
 _preview_manager: Optional[PreviewWorkerManager] = None
 
 
-def _ensure_ansi_utils_in_cache():
-    """Copy _ansi_utils.py to the info cache directory so cached scripts can import it."""
+def _ensure_ansi_utils_in_cache(cache_dir: Path = INFO_CACHE_DIR):
+    """Copy _ansi_utils.py to a cache directory so cached scripts can import it."""
     source = FZF_SCRIPTS_DIR / "_ansi_utils.py"
-    dest = INFO_CACHE_DIR / "_ansi_utils.py"
+    dest = cache_dir / "_ansi_utils.py"
 
     if source.exists() and (
         not dest.exists() or source.stat().st_mtime > dest.stat().st_mtime
@@ -149,7 +149,7 @@ def _ensure_ansi_utils_in_cache():
             import shutil
 
             shutil.copy2(source, dest)
-            logger.debug(f"Copied _ansi_utils.py to {INFO_CACHE_DIR}")
+            logger.debug(f"Copied _ansi_utils.py to {cache_dir}")
         except Exception as e:
             logger.warning(f"Failed to copy _ansi_utils.py to cache: {e}")
 
@@ -350,6 +350,7 @@ def get_episode_preview(
         return get_rofi_episode_preview(episodes, media_item, config)
     IMAGES_CACHE_DIR.mkdir(parents=True, exist_ok=True)
     INFO_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    _ensure_ansi_utils_in_cache()
 
     HEADER_COLOR = config.fzf.preview_header_color.split(",")
     SEPARATOR_COLOR = config.fzf.preview_separator_color.split(",")
@@ -399,6 +400,7 @@ def get_character_preview(choice_map: Dict[str, Character], config: AppConfig) -
 
     IMAGES_CACHE_DIR.mkdir(parents=True, exist_ok=True)
     INFO_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    _ensure_ansi_utils_in_cache()
 
     HEADER_COLOR = config.fzf.preview_header_color.split(",")
     SEPARATOR_COLOR = config.fzf.preview_separator_color.split(",")
@@ -447,6 +449,7 @@ def get_review_preview(choice_map: Dict[str, MediaReview], config: AppConfig) ->
 
     IMAGES_CACHE_DIR.mkdir(parents=True, exist_ok=True)
     INFO_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    _ensure_ansi_utils_in_cache()
 
     HEADER_COLOR = config.fzf.preview_header_color.split(",")
     SEPARATOR_COLOR = config.fzf.preview_separator_color.split(",")
@@ -497,6 +500,7 @@ def get_airing_schedule_preview(
 
     IMAGES_CACHE_DIR.mkdir(parents=True, exist_ok=True)
     INFO_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    _ensure_ansi_utils_in_cache()
 
     HEADER_COLOR = config.fzf.preview_header_color.split(",")
     SEPARATOR_COLOR = config.fzf.preview_separator_color.split(",")
@@ -557,19 +561,7 @@ def get_dynamic_anime_preview(config: AppConfig) -> str:
     INFO_CACHE_DIR.mkdir(parents=True, exist_ok=True)
     search_cache_dir = APP_CACHE_DIR / "previews" / "dynamic-search"
     search_cache_dir.mkdir(parents=True, exist_ok=True)
-    source = FZF_SCRIPTS_DIR / "_ansi_utils.py"
-    dest = search_cache_dir / "_ansi_utils.py"
-
-    if source.exists() and (
-        not dest.exists() or source.stat().st_mtime > dest.stat().st_mtime
-    ):
-        try:
-            import shutil
-
-            shutil.copy2(source, dest)
-            logger.debug(f"Copied _ansi_utils.py to {INFO_CACHE_DIR}")
-        except Exception as e:
-            logger.warning(f"Failed to copy _ansi_utils.py to cache: {e}")
+    _ensure_ansi_utils_in_cache(search_cache_dir)
 
     HEADER_COLOR = config.fzf.preview_header_color.split(",")
     SEPARATOR_COLOR = config.fzf.preview_separator_color.split(",")
